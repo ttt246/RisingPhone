@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_receive_message"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_8sdp"
+    android:padding="@dimen/_4sdp">
+
+    <LinearLayout
+        android:id="@+id/ll_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:background="@drawable/background_received_message"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.75">
+
+        <ImageView
+            android:id="@+id/imgMessage"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13ssp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="@+id/ll_msg"
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/_2sdp"
+            android:paddingHorizontal="@dimen/_2sdp"
+            android:background="@drawable/background_feedback_layout">
+            <ImageView
+                android:id="@+id/btn_thumb_up"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_2sdp"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:src="@drawable/ic_thumb_up_disable"/>
+
+            <View
+                android:layout_width="@dimen/_1sdp"
+                android:layout_height="match_parent"
+                android:background="@color/thumb_color"
+                android:layout_marginHorizontal="@dimen/_2sdp"/>
+
+            <ImageView
+                android:id="@+id/btn_thumb_down"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:src="@drawable/ic_thumb_down_disable"
+                android:paddingVertical="@dimen/_2sdp"
+                android:paddingHorizontal="@dimen/_8sdp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/ll_message_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintStart_toStartOf="@+id/ll_msg"
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg">
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

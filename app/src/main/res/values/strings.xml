@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">risingandroid</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="app_title">RisingAndroid</string>
+    <string name="photo_cancel">Cancel to load photo</string>
+</resources>

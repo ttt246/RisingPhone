@@ -1,0 +1,37 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        // Make sure that you have the following two repositories
+        google()  // Google's Maven repository
+        mavenCentral()  // Maven Central repository
+    }
+    dependencies {
+
+        // Add the dependency for the Google services Gradle plugin
+        classpath 'com.google.gms:google-services:4.3.15'
+//        classpath 'com.google.gms:google-services:4.3.13'
+
+    }
+}
+plugins {
+    id 'com.android.application' version '7.4.2' apply false
+    id 'com.android.library' version '7.4.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    buildToolsVersion = "32.0.0"
+    androidxAnnotationVersion = "1.5.0"
+    guavaVersion = "31.1-android"
+    coreVersion = "1.6.0-alpha01"
+    extJUnitVersion = "1.2.0-alpha01"
+    runnerVersion = "1.6.0-alpha01"
+    rulesVersion = "1.6.0-alpha01"
+    espressoVersion = "3.6.0-alpha01"
+    uiAutomatorVersion = "2.2.0"
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#1C2E46</color>
+    <color name="primary_dark">#142232</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="input_background">#ECECEC</color>
+    <color name="icon_background">#20FFFFFF</color>
+    <color name="error">#B00020</color>
+    <color name="received_message_background">#090D16</color>
+    <color name="green">#008000</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="filepicker_bgcolor">#F3F3F3</color>
+    <color name="overlay_bgcolor">#bb000000</color>
+    <color name="overlay_load_photo">#cc000000</color>
+    <color name="transparent_color">#00000000</color>
+    <color name="loading_color">#f5f5f5</color>
+    <color name="thumb_color">#1C2E46</color>
+    <color name="thumb_disable_color">#a0a0a0</color>
+
+    <color name="ucrop_color_toolbar">@color/purple_700</color>
+    <color name="ucrop_color_statusbar">@color/purple_700</color>
+    <color name="ucrop_color_widget_active">@color/purple_700</color>
+
+    <color name="widget_sms_bg_color">#f5f5f5</color>
+</resources>
