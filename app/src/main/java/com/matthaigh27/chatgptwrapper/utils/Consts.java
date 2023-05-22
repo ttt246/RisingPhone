@@ -29,7 +29,7 @@ public class Consts {
      * okhttp server url
      */
 
-    public static String SERVER_URL = "https://smartphone.herokuapp.com/";
+    public static String SERVER_URL = "https://chatgptphone.herokuapp.com/";
     public static long CUSTOM_TIMEOUT = 120;
 
     /**

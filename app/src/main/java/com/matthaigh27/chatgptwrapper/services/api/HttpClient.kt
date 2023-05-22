@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 
 class HttpClient{
     /* Server URL and Api Endpoints */
-    final val SERVER_URL = "https://smartphone.herokuapp.com/"
+    final val SERVER_URL = "https://chatgptphone.herokuapp.com/"
     final val SEND_NOTIFICATION_URL = SERVER_URL + "sendNotification"
     final val IMAGE_RELATEDNESS = SERVER_URL + "image_relatedness"
     final val UPLOAD_IMAGE = SERVER_URL + "uploadImage"

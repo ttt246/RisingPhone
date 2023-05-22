@@ -1,7 +1,6 @@
 # RisingAndroid
 [![Android CI Develop](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml)
 [![Android CI](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml)
-[![Android Release](https://github.com/ttt246/RisingPhone/actions/workflows/android-release.yml/badge.svg?branch=main)](https://github.com/ttt246/RisingPhone/actions/workflows/android-release.yml)
 
 The goal of this project is to develop a phone operating system that replaces the traditional UI of an Android-based smartphone with ChatGPT. The AI will manage control of all apps via plugins, which can be prompted by the user.
 
