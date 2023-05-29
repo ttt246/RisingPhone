@@ -34,4 +34,5 @@ ext {
     rulesVersion = "1.6.0-alpha01"
     espressoVersion = "3.6.0-alpha01"
     uiAutomatorVersion = "2.2.0"
+    room_version = '2.5.1'
 }

@@ -1,6 +1,6 @@
-package com.matthaigh27.chatgptwrapper.models
+package com.matthaigh27.chatgptwrapper.models.common
 
-class ImageTableModel {
+class ImagePromptModel {
     var id: String = ""
     var path: String = ""
 

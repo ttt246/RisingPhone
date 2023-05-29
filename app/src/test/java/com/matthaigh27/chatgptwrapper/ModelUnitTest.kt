@@ -1,9 +1,7 @@
 package com.matthaigh27.chatgptwrapper
 
-import com.matthaigh27.chatgptwrapper.models.ChatModel
-import com.matthaigh27.chatgptwrapper.models.ImageTableModel
-import com.matthaigh27.chatgptwrapper.models.RequestBodyModel
-import com.matthaigh27.chatgptwrapper.utils.ReqType
+import com.matthaigh27.chatgptwrapper.models.viewmodels.ChatMessageModel
+import com.matthaigh27.chatgptwrapper.models.common.ImagePromptModel
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -17,7 +15,7 @@ class ModelUnitTest {
         val testFeedback = 0
         val testIsMe = true
 
-        val model = ChatModel()
+        val model = ChatMessageModel()
         model.message = testMessage
         model.isMe = testIsMe
         model.feedback = testFeedback
@@ -59,7 +57,7 @@ class ModelUnitTest {
         val testId = "TestId"
         val testPath = "TestPath"
 
-        val model = ImageTableModel(testId, testPath)
+        val model = ImagePromptModel(testId, testPath)
 
         assertEquals(model.id, testId)
         assertEquals(model.path, testPath)

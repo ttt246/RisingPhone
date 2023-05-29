@@ -1,9 +1,11 @@
-package com.matthaigh27.chatgptwrapper.models
+package com.matthaigh27.chatgptwrapper.models.viewmodels
+
+import androidx.lifecycle.ViewModel
 
 /**
  * ChatModel for Chat RecyclerView
  */
-class ChatModel {
+class ChatMessageModel: ViewModel() {
     var message: String = ""
     var isMe: Boolean = true
     var image: ByteArray? = null
@@ -12,4 +14,5 @@ class ChatModel {
     var feedback = 0
     var isWidget: Boolean = false
     var widgetType = ""
+    var widgetDescription = ""
 }

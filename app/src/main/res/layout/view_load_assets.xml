@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_load_photo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/load_assets_overlay_bgcolor"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_load_photo"
+            android:layout_width="@dimen/load_assets_imageview_width"
+            android:layout_height="@dimen/load_assets_imageview_height"
+            android:layout_marginBottom="@dimen/load_assets_imageview_margin_bottom" />
+
+        <TextView
+            android:id="@+id/btn_cancel_load_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/background_load_assets_button_cancel"
+            android:padding="@dimen/load_assets_imageview_height"
+            android:text="@string/load_assets_cancel"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

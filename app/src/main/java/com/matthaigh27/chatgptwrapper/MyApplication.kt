@@ -8,7 +8,7 @@ import android.content.pm.PackageManager
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
-import com.matthaigh27.chatgptwrapper.utils.Consts
+import com.matthaigh27.chatgptwrapper.utils.Constants
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -24,15 +24,14 @@ class MyApplication : Application() {
 
         initToken()
         // on below line we are getting device id.
-        mUUID =
-            Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+        mUUID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         appContext = applicationContext as MyApplication
     }
 
     private fun initToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.w(Consts.TAG, "Fetching FCM registration token failed", task.exception)
+                Log.w(Constants.TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
 
@@ -44,15 +43,15 @@ class MyApplication : Application() {
              * Get new FCM registration token
              */
             mFCMToken = task.result
-            Log.d(Consts.TAG, mFCMToken)
+            Log.d(Constants.TAG, mFCMToken)
         })
     }
 
-    fun getFCMToken() : String {
+    fun getFCMToken(): String {
         return this.mFCMToken
     }
 
-    fun getUUID() : String {
+    fun getUUID(): String {
         return this.mUUID
     }
 
@@ -66,7 +65,7 @@ class MyApplication : Application() {
 
         val builder = NotificationCompat.Builder(this, channelId)
         builder.setSmallIcon(R.drawable.ic_notification)
-        builder.setContentTitle(Consts.TAG)
+        builder.setContentTitle(Constants.TAG)
         builder.setContentText(message)
         builder.setStyle(
             NotificationCompat.BigTextStyle().bigText(
@@ -96,6 +95,6 @@ class MyApplication : Application() {
     }
 
     companion object {
-        lateinit  var appContext: MyApplication
+        lateinit var appContext: MyApplication
     }
 }

@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
         <activity
-            android:name=".activites.ChatActivity"
+            android:name=".activites.HomeActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>

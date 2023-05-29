@@ -5,6 +5,6 @@ class ReqType {
     val IMAGE_UPLOAD = "image_upload"
 
     companion object {
-        var instance : ReqType = ReqType()
+        var instance: ReqType = ReqType()
     }
 }

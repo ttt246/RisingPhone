@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_sent_message"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/cl_sent_message"
-    android:layout_marginTop="@dimen/_8sdp"
-    android:padding="@dimen/_4sdp">
+    android:layout_marginTop="@dimen/chat_message_item_layout_margin_top"
+    android:padding="@dimen/chat_message_item_layout_padding">
 
     <LinearLayout
+        android:id="@+id/ll_msg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/chat_message_sent_item_margin_end"
         android:background="@drawable/background_sent_message"
         android:orientation="vertical"
-        android:padding="@dimen/_8sdp"
+        android:padding="@dimen/chat_message_item_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_max="wrap"
@@ -20,8 +22,8 @@
 
         <ImageView
             android:id="@+id/imgMessage"
-            android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_70sdp"
+            android:layout_width="@dimen/chat_message_item_imageview_width"
+            android:layout_height="@dimen/chat_message_item_imageview_height"
             android:visibility="gone" />
 
         <TextView
@@ -29,7 +31,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="@dimen/_13ssp" />
+            android:textSize="@dimen/chat_message_item_fontsize" />
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/ll_message_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/chat_message_widget_margin_top"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/ll_msg"
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

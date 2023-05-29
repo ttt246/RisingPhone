@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/view_help_prompt_command_listitem_height"
+    android:background="@color/view_help_prompt_command_listitem_bgcolor"
+    android:ellipsize="marquee"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/view_help_prompt_command_listitem_padding_horizontal"
+    android:singleLine="true"
+    android:textColor="@color/view_help_prompt_command_listitem_textcolor"
+    android:textSize="@dimen/view_help_prompt_command_listitem_textsize" />
