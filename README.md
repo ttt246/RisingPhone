@@ -40,7 +40,6 @@ The goal of this project is to develop a phone operating system that replaces th
 - Instrumented Test
 
 ## Contributing
-------------
 
 Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
 
