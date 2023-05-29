@@ -1,12 +1,16 @@
 package com.matthaigh27.chatgptwrapper.utils
 
-import android.app.ActivityManager
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import com.matthaigh27.chatgptwrapper.MyApplication
+import com.matthaigh27.chatgptwrapper.models.common.HelpCommandModel
+import com.matthaigh27.chatgptwrapper.models.common.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.utils.Constants.*
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -82,7 +86,8 @@ class Utils {
         val timeStamp: String =
             SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "IMG_" + timeStamp + "_"
-        val storageDir: File = MyApplication.appContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        val storageDir: File =
+            MyApplication.appContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
         return File.createTempFile(
             imageFileName,  /* prefix */
             ".jpg",         /* suffix */
@@ -90,7 +95,66 @@ class Utils {
         )
     }
 
+    /**
+     * when users input command starting with '/'
+     *
+     * @param strCommand is string with '/' and '-', ex: /browser -d
+     * @return command model with main ommand and assistance command
+     */
+    fun getHelpCommandFromStr(strCommand: String): HelpCommandModel {
+        val commandModel = HelpCommandModel()
+        if (strCommand == "/$HELP_COMMAND") {
+            commandModel.mainCommandName = HELP_COMMAND
+            commandModel.assistCommandName = HELP_COMMAND_ALL
+            return commandModel
+        }
+        try {
+            if (strCommand.startsWith("/$HELP_COMMAND") || strCommand.startsWith("!$HELP_COMMAND")) {
+                val words = strCommand.split("\\s".toRegex()).toTypedArray()
+                if (words.size != 2) {
+                    throw Exception(HELP_COMMAND_ERROR_NO_MAIN)
+                }
+                commandModel.mainCommandName = words[0].substring(1, words[0].length)
+                commandModel.assistCommandName = words[1]
+                if (commandModel.mainCommandName == "" || commandModel.assistCommandName == "") {
+                    throw Exception(HELP_COMMAND_ERROR_NO_MAIN)
+                }
+            } else {
+                commandModel.mainCommandName = strCommand.substring(1, strCommand.length)
+            }
+        } catch (e: Exception) {
+            throw Exception(HELP_COMMAND_ERROR_NO_INVALID_FORMAT)
+        }
+        return commandModel
+    }
+
+    fun getHelpCommandListFromJsonString(jsonStrCommandList: String): ArrayList<HelpPromptModel> {
+        val commandlist = ArrayList<HelpPromptModel>()
+        try {
+            val helpCommandStrList = JSONArray(jsonStrCommandList)
+            for (i in 0 until helpCommandStrList.length()) {
+                val helpCommand = JSONObject(helpCommandStrList[i].toString())
+
+                val helpPromptModel = HelpPromptModel()
+                helpPromptModel.name = helpCommand.getString("name")
+                helpPromptModel.description = helpCommand.getString("description")
+                helpPromptModel.prompt = helpCommand.getString("prompt")
+
+                helpPromptModel.tags = ArrayList()
+                val jsonArrayTags = helpCommand.getJSONArray("tags")
+                for (j in 0 until jsonArrayTags.length()) {
+                    helpPromptModel.tags!!.add(jsonArrayTags[j].toString())
+                }
+                commandlist.add(helpPromptModel)
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            throw Exception(ERROR_MSG_JSON)
+        }
+        return commandlist
+    }
+
     companion object {
-        var instance : Utils = Utils()
+        var instance: Utils = Utils()
     }
 }

@@ -1,9 +1,10 @@
 package com.matthaigh27.chatgptwrapper.services.api
 
 import android.util.Log
-import com.google.api.Http
-import com.matthaigh27.chatgptwrapper.models.RequestBodyModel
-import com.matthaigh27.chatgptwrapper.utils.Consts
+import com.matthaigh27.chatgptwrapper.models.requestmodels.RequestBodyModel
+import com.matthaigh27.chatgptwrapper.utils.Constants
+import com.matthaigh27.chatgptwrapper.utils.Constants.GET
+import com.matthaigh27.chatgptwrapper.utils.Constants.POST
 import com.matthaigh27.chatgptwrapper.utils.ReqType
 import okhttp3.Call
 import okhttp3.Callback
@@ -16,29 +17,34 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class HttpClient{
+class HttpClient {
     /* Server URL and Api Endpoints */
-    final val SERVER_URL = "https://chatgptphone.herokuapp.com/"
-    final val SEND_NOTIFICATION_URL = SERVER_URL + "sendNotification"
-    final val IMAGE_RELATEDNESS = SERVER_URL + "image_relatedness"
-    final val UPLOAD_IMAGE = SERVER_URL + "uploadImage"
+    val SERVER_URL = "https://smartphone.herokuapp.com/"
+    val SEND_NOTIFICATION_URL = SERVER_URL + "sendNotification"
+    val IMAGE_RELATEDNESS = SERVER_URL + "image_relatedness"
+    val UPLOAD_IMAGE = SERVER_URL + "uploadImage"
+    val GET_ALL_HELP_COMMANDS = SERVER_URL + "commands"
 
-    lateinit var mCallback : HttpRisingInterface
-    constructor(callback : HttpRisingInterface) {
+    var mCallback: HttpRisingInterface
+
+    constructor(callback: HttpRisingInterface) {
         mCallback = callback
     }
 
-    private fun sendOkHttpRequest(req: RequestBodyModel, postUrl: String) {
-        val postBody = req.buidJsonObject().toString()
-        val body: RequestBody = RequestBody.create(Consts.JSON, postBody)
+    private fun sendOkHttpRequest(postBody: String, postUrl: String, method: String) {
+        val body: RequestBody = RequestBody.create(Constants.JSON, postBody)
 
         /**
          * set okhttpclient timeout to 120s
          */
-        val request = Request.Builder().url(postUrl).post(body).build()
-        val client = OkHttpClient.Builder().connectTimeout(Consts.CUSTOM_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(Consts.CUSTOM_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(Consts.CUSTOM_TIMEOUT, TimeUnit.SECONDS).build()
+        var request: Request? = null
+        if (method == POST) request = Request.Builder().url(postUrl).post(body).build()
+        else request = Request.Builder().url(postUrl).get().build()
+
+        val client =
+            OkHttpClient.Builder().connectTimeout(Constants.CUSTOM_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(Constants.CUSTOM_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(Constants.CUSTOM_TIMEOUT, TimeUnit.SECONDS).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -53,7 +59,7 @@ class HttpClient{
             override fun onResponse(call: Call, response: Response) {
 
                 val myResponse = response.body()!!.string()
-                Log.d(Consts.TAG, myResponse)
+                Log.d(Constants.TAG, myResponse)
 
                 try {
                     val json = JSONObject(myResponse)["result"].toString()
@@ -67,17 +73,34 @@ class HttpClient{
     }
 
     /* call sendNotification */
-    fun callSendNotification(message : String) {
-        sendOkHttpRequest(RequestBodyModel.Builder().message(message).type(ReqType.instance.MESSAGE).build(), SEND_NOTIFICATION_URL)
+    fun callSendNotification(message: String) {
+        sendOkHttpRequest(
+            RequestBodyModel.Builder().message(message).type(ReqType.instance.MESSAGE).build()
+                .buildJsonObject().toString(), SEND_NOTIFICATION_URL, POST
+        )
     }
 
     /* call image_relatedness */
-    fun callImageRelatedness(imageName : String) {
-        sendOkHttpRequest(RequestBodyModel.Builder().imageName(imageName).type(ReqType.instance.MESSAGE).build(), IMAGE_RELATEDNESS)
+    fun callImageRelatedness(imageName: String) {
+        sendOkHttpRequest(
+            RequestBodyModel.Builder().imageName(imageName).type(ReqType.instance.MESSAGE).build()
+                .buildJsonObject().toString(), IMAGE_RELATEDNESS, POST
+        )
     }
 
     /* call image_upload */
-    fun callImageUpload(imageName : String) {
-        sendOkHttpRequest(RequestBodyModel.Builder().imageName(imageName).type(ReqType.instance.IMAGE_UPLOAD).build(), UPLOAD_IMAGE)
+    fun callImageUpload(imageName: String) {
+        sendOkHttpRequest(
+            RequestBodyModel.Builder().imageName(imageName).type(ReqType.instance.IMAGE_UPLOAD)
+                .build().buildJsonObject().toString(), UPLOAD_IMAGE, POST
+        )
+    }
+
+    fun getALlHelpPromptCommands() {
+        sendOkHttpRequest(
+            RequestBodyModel.Builder().build().buildJsonObject().toString(),
+            GET_ALL_HELP_COMMANDS,
+            GET
+        )
     }
 }

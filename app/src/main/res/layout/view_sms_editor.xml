@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cdView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/chat_message_widget_radius"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/sms_widget_padding_horizontal"
+            android:paddingTop="@dimen/sms_widget_padding_top"
+            android:paddingBottom="@dimen/sms_widget_padding_bottom">
+
+            <EditText
+                android:id="@+id/et_to_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sms_edittext_height"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/sms_edittext_margin_bottom"
+                android:background="@drawable/background_sms_edittext"
+                android:ems="10"
+                android:hint="@string/sms_hint_to"
+                android:inputType="textPersonName"
+                android:textColor="@color/sms_button_edittext_color"
+                android:textColorHint="@color/sms_button_edittext_hint_color"
+                android:textSize="@dimen/sms_edittext_font_size" />
+
+            <EditText
+                android:id="@+id/et_message"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sms_edittext_height"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/background_sms_edittext"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="@string/sms_hint_message"
+                android:inputType="textMultiLine"
+                android:textColor="@color/sms_button_edittext_color"
+                android:textColorHint="@color/sms_button_edittext_hint_color"
+                android:textSize="@dimen/sms_edittext_font_size" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right">
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/sms_button_height"
+                    android:background="@drawable/background_sms_rounded_button"
+                    android:text="@string/sms_cancel"
+                    android:textAllCaps="false"
+                    android:textColor="@color/sms_button_text_color"
+                    android:textSize="@dimen/sms_button_fontsize" />
+
+                <Button
+                    android:id="@+id/btn_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/sms_button_height"
+                    android:layout_marginLeft="@dimen/sms_button_margin_horizontal"
+                    android:background="@drawable/background_sms_rounded_button"
+                    android:text="@string/sms_confirm"
+                    android:textAllCaps="false"
+                    android:textColor="@color/sms_button_text_color"
+                    android:textSize="@dimen/sms_button_fontsize" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

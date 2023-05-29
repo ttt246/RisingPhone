@@ -1,4 +1,4 @@
-package com.matthaigh27.chatgptwrapper.models
+package com.matthaigh27.chatgptwrapper.models.requestmodels
 
 import com.matthaigh27.chatgptwrapper.MyApplication
 import org.json.JSONException
@@ -15,7 +15,7 @@ class RequestBodyModel {
     var imageName: String = ""
     var uuid: String = ""
 
-    constructor(builder : Builder) {
+    constructor(builder: Builder) {
         this.token = MyApplication.appContext.getFCMToken()
         this.uuid = MyApplication.appContext.getUUID()
         this.message = builder.message
@@ -23,9 +23,8 @@ class RequestBodyModel {
         this.uuid = builder.uuid
     }
 
-
     @Throws(JSONException::class)
-    fun buidJsonObject(): JSONObject {
+    fun buildJsonObject(): JSONObject {
 
         val jsonObject = JSONObject()
         jsonObject.accumulate("type", type)
@@ -43,10 +42,12 @@ class RequestBodyModel {
         var message: String = ""
         var imageName: String = ""
         var uuid: String = ""
+
         constructor() {
 
         }
-        constructor(request : RequestBodyModel) {
+
+        constructor(request: RequestBodyModel) {
             this.type = request.type
             this.token = request.token
             this.message = request.message
@@ -54,32 +55,32 @@ class RequestBodyModel {
             this.uuid = request.uuid
         }
 
-        fun type(type : String) : Builder {
+        fun type(type: String): Builder {
             this.type = type
             return this
         }
 
-        fun token(token : String) : Builder {
+        fun token(token: String): Builder {
             this.token = token
             return this
         }
 
-        fun message(message : String) : Builder {
+        fun message(message: String): Builder {
             this.message = message
             return this
         }
 
-        fun imageName(imageName : String) : Builder {
+        fun imageName(imageName: String): Builder {
             this.imageName = imageName
             return this
         }
 
-        fun uuid(uuid : String) : Builder {
+        fun uuid(uuid: String): Builder {
             this.uuid = uuid
             return this
         }
 
-        fun build() : RequestBodyModel {
+        fun build(): RequestBodyModel {
             return RequestBodyModel(this)
         }
     }

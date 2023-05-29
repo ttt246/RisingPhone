@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/head_bgcolor"
+    android:paddingTop="@dimen/header_padding_top"
+    android:paddingBottom="@dimen/header_padding_bottom">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageInfo"
+        android:layout_width="@dimen/header_info_icon_width"
+        android:layout_height="@dimen/header_info_icon_height"
+        android:layout_marginEnd="@dimen/header_info_icon_margin_end"
+        android:padding="@dimen/header_info_icon_padding"
+        android:src="@drawable/ic_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/head_app_info_icon_bgcolor" />
+
+    <TextView
+        android:id="@+id/textName"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/header_app_title_height"
+        android:layout_marginStart="@dimen/header_app_title_start"
+        android:layout_marginEnd="@dimen/header_app_title_end"
+        android:ellipsize="end"
+        android:gravity="left|center_vertical"
+        android:maxLines="1"
+        android:text="@string/header_app_title"
+        android:textColor="@color/head_app_title_text_color"
+        android:textSize="@dimen/header_app_title_fontsize"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/imageInfo"
+        app:layout_constraintEnd_toStartOf="@id/imageInfo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageInfo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

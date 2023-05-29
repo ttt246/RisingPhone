@@ -1,15 +1,10 @@
 package com.matthaigh27.chatgptwrapper.widgets
 
-import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageManager
-import android.telephony.SmsManager
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.matthaigh27.chatgptwrapper.R
@@ -30,7 +25,7 @@ class SmsEditorWidget(
     private var mListener: OnClickListener? = null
 
     init {
-        inflate(context, R.layout.widget_sms_editor, this)
+        inflate(context, R.layout.view_sms_editor, this)
         mContext = context
 
         layoutParams = LayoutParams(
@@ -45,7 +40,7 @@ class SmsEditorWidget(
         btnCancel = findViewById(R.id.btn_cancel)
 
         btnConfirm.setOnClickListener {
-            if (etToName.text.toString() == "" || etMessage.text.toString() == "") {
+            if (etToName.text.toString().isEmpty() || etMessage.text.toString().isEmpty()) {
                 Toast.makeText(
                     mContext, "Please input phone number and message.", Toast.LENGTH_SHORT
                 ).show()

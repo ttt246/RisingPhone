@@ -1,6 +1,26 @@
 <resources>
-    <string name="app_name">risingandroid</string>
-    <string name="type_a_message">Type a message</string>
-    <string name="app_title">RisingAndroid</string>
-    <string name="photo_cancel">Cancel to load photo</string>
+    <string name="app_name">RisingPhone</string>
+
+    <!-- header -->
+    <string name="header_app_title">RisingPhone</string>
+
+    <!-- app control -->
+    <string name="control_message_edittext_placeholder">Type a message</string>
+
+    <!-- load assets -->
+    <string name="load_assets_cancel">Cancel to load photo</string>
+
+    <!-- sms editor -->
+    <string name="sms_confirm">Confirm</string>
+    <string name="sms_cancel">Cancel</string>
+    <string name="sms_hint_to">To</string>
+    <string name="sms_hint_message">Message</string>
+
+    <!-- help prompt dialog -->
+    <string name="help_prompt_command">Prompt Command</string>
+    <string name="help_prompt_command_select">Select Prompt Command</string>
+    <string name="help_prompt_command_keys">Prompt Command Keys</string>
+    <string name="help_prompt_command_ok">Ok</string>
+    <string name="help_prompt_command_cancel">Cancel</string>
+
 </resources>

@@ -21,12 +21,12 @@ jobs:
         cache: gradle
 
     - name: Create file
-      run: cat /home/runner/work/RisingPhone/RisingPhone/app/google-services.json | base64
+      run: cat /home/runner/work/risingandroid/risingandroid/app/google-services.json | base64
 
     - name: Putting data
       env:
         DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      run: echo $DATA > /home/runner/work/RisingPhone/RisingPhone/app/google-services.json
+      run: echo $DATA > /home/runner/work/risingandroid/risingandroid/app/google-services.json
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew

@@ -1,26 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="_12ssp">12sp</dimen>
-    <dimen name="_13ssp">13sp</dimen>
+    <!-- common -->
+    <dimen name="common_button_horizontal_space_size">4dp</dimen>
+    <dimen name="common_button_fontsize">13dp</dimen>
+    <dimen name="common_button_height">30dp</dimen>
+    <dimen name="common_divider_width">1dp</dimen>
 
-    <dimen name="_1sdp">1dp</dimen>
-    <dimen name="_2sdp">2dp</dimen>
-    <dimen name="_4sdp">4dp</dimen>
-    <dimen name="_5sdp">5dp</dimen>
-    <dimen name="_8sdp">8dp</dimen>
-    <dimen name="_12sdp">12dp</dimen>
-    <dimen name="_14sdp">14dp</dimen>
-    <dimen name="_16sdp">16dp</dimen>
-    <dimen name="_20sdp">20dp</dimen>
-    <dimen name="_24sdp">24dp</dimen>
-    <dimen name="_25sdp">25dp</dimen>
-    <dimen name="_30sdp">30dp</dimen>
-    <dimen name="_32sdp">32dp</dimen>
-    <dimen name="_40sdp">40dp</dimen>
-    <dimen name="_48sdp">48dp</dimen>
-    <dimen name="_50sdp">50sp</dimen>
-    <dimen name="_70sdp">70sp</dimen>
-    <dimen name="_100sdp">100sp</dimen>
+    <!-- font sizes -->
+    <dimen name="font_larger">22sp</dimen>
+    <dimen name="font_large">18sp</dimen>
+    <dimen name="font_normal">15sp</dimen>
+    <dimen name="font_small">12sp</dimen>
 
+    <!-- typical spacing between two views -->
+    <dimen name="spacing_huge">40dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_normal">14dp</dimen>
+    <dimen name="spacing_small">10dp</dimen>
+    <dimen name="spacing_tiny">4dp</dimen>
+
+    <!-- typical sizes of views -->
+    <dimen name="button_height_tall">60dp</dimen>
+    <dimen name="button_height_normal">40dp</dimen>
+    <dimen name="button_height_short">32dp</dimen>
+
+    <!-- chat main interface -->
+    <dimen name="chat_content_top_radius">10dp</dimen>
+
+    <!-- Header -->
+    <dimen name="header_padding_top">12dp</dimen>
+    <dimen name="header_padding_bottom">12dp</dimen>
+    <dimen name="header_info_icon_width">30dp</dimen>
+    <dimen name="header_info_icon_height">30dp</dimen>
+    <dimen name="header_info_icon_margin_end">16dp</dimen>
+    <dimen name="header_info_icon_padding">4dp</dimen>
+    <dimen name="header_app_title_height">30dp</dimen>
+    <dimen name="header_app_title_start">8dp</dimen>
+    <dimen name="header_app_title_end">8dp</dimen>
+    <dimen name="header_app_title_fontsize">20sp</dimen>
+
+    <!-- SMS Editor -->
+    <dimen name="sms_widget_padding_horizontal">10dp</dimen>
+    <dimen name="sms_widget_padding_bottom">10dp</dimen>
+    <dimen name="sms_widget_padding_top">20dp</dimen>
+    <dimen name="sms_widget_evaluate">20dp</dimen>
+    <dimen name="sms_widget_evaluate_max">20dp</dimen>
+
+    <dimen name="sms_edittext_margin_bottom">16dp</dimen>
+    <dimen name="sms_edittext_font_size">13sp</dimen>
+    <dimen name="sms_edittext_height">30dp</dimen>
+    <dimen name="sms_edittext_bg_left">-2dp</dimen>
+    <dimen name="sms_edittext_bg_right">-2dp</dimen>
+    <dimen name="sms_edittext_bg_top">-2dp</dimen>
+    <dimen name="sms_edittext_bg_bottom">1dp</dimen>
+    <dimen name="sms_edittext_bg_stroke_width">1dp</dimen>
+
+    <dimen name="sms_button_radius">20dp</dimen>
+    <dimen name="sms_button_stroke_width">1dp</dimen>
+    <dimen name="sms_button_height">30dp</dimen>
+    <dimen name="sms_button_fontsize">13sp</dimen>
+    <dimen name="sms_button_margin_horizontal">4dp</dimen>
+
+    <!-- Loading -->
+    <dimen name="loading_spinner_width">20dp</dimen>
+    <dimen name="loading_spinner_height">20dp</dimen>
+    <dimen name="loading_description_textsize">16sp</dimen>
+
+    <!-- Load Image -->
+    <dimen name="load_assets_imageview_width">100dp</dimen>
+    <dimen name="load_assets_imageview_height">100dp</dimen>
+    <dimen name="load_assets_imageview_margin_bottom">8dp</dimen>
+    <dimen name="load_assets_button_padding">8dp</dimen>
+    <dimen name="load_assets_button_radius">8dp</dimen>
+
+    <!-- app control -->
+    <dimen name="control_margin_top">8dp</dimen>
+    <dimen name="control_send_button_width">40dp</dimen>
+    <dimen name="control_send_button_height">40dp</dimen>
+    <dimen name="control_send_button_margin_bottom">12dp</dimen>
+    <dimen name="control_send_button_margin_end">16dp</dimen>
+    <dimen name="control_send_button_icon_padding">8dp</dimen>
+    <dimen name="control_send_button_icon_margin_start">4dp</dimen>
+    <dimen name="control_message_edittext_height">48dp</dimen>
+    <dimen name="control_message_edittext_margin_start">4dp</dimen>
+    <dimen name="control_message_edittext_margin_end">8dp</dimen>
+    <dimen name="control_message_edittext_margin_bottom">12dp</dimen>
+    <dimen name="control_message_edittext_padding_start">16dp</dimen>
+    <dimen name="control_message_edittext_padding_end">16dp</dimen>
+    <dimen name="control_message_edittext_text_fontsize">20sp</dimen>
+    <dimen name="control_tool_layout_height">40dp</dimen>
+    <dimen name="control_tool_layout_margin_start">4dp</dimen>
+    <dimen name="control_tool_layout_margin_bottom">12dp</dimen>
+    <dimen name="control_image_upload_button_width">40dp</dimen>
+    <dimen name="control_image_upload_button_margin_end">2dp</dimen>
+    <dimen name="control_image_upload_button_margin_padding">8dp</dimen>
+    <dimen name="control_image_picker_button_width">40dp</dimen>
+    <dimen name="control_image_picker_button_padding">8dp</dimen>
+    <dimen name="control_button_common_radius">24dp</dimen>
+
+    <!-- dialog image picker -->
+    <dimen name="dialog_image_picker_padding">16dp</dimen>
+    <dimen name="dialog_image_picker_margin">16dp</dimen>
+    <dimen name="dialog_image_picker_icon_margin_top">10dp</dimen>
+    <dimen name="dialog_image_picker_icon_width">48dp</dimen>
+    <dimen name="dialog_image_picker_icon_height">48dp</dimen>
+    <dimen name="dialog_image_picker_icon_text_margin_top">5dp</dimen>
+
+    <!-- chat item -->
+    <dimen name="chat_message_item_layout_margin_top">8dp</dimen>
+    <dimen name="chat_message_item_layout_padding">4dp</dimen>
+    <dimen name="chat_message_item_radius">20dp</dimen>
+    <dimen name="chat_message_item_padding">8dp</dimen>
+    <dimen name="chat_message_item_fontsize">13sp</dimen>
+    <dimen name="chat_message_item_imageview_width">70dp</dimen>
+    <dimen name="chat_message_item_imageview_height">70dp</dimen>
+    <dimen name="chat_message_sent_item_margin_end">15dp</dimen>
+    <dimen name="chat_message_received_item_margin_start">15dp</dimen>
+    <dimen name="chat_message_widget_margin_top">8dp</dimen>
+    <dimen name="chat_message_widget_radius">10dp</dimen>
+
+    <!-- chat feedback -->
+    <dimen name="chat_feedback_margin_top">8dp</dimen>
+    <dimen name="chat_feedback_stroke_width">1dp</dimen>
+    <dimen name="chat_feedback_radius">10dp</dimen>
+    <dimen name="chat_feedback_padding">2dp</dimen>
+    <dimen name="chat_feedback_thumb_width">30dp</dimen>
+    <dimen name="chat_feedback_thumb_height">16dp</dimen>
+    <dimen name="chat_feedback_thumb_padding_horizontal">8dp</dimen>
+    <dimen name="chat_feedback_thumb_padding_vertical">2dp</dimen>
+    <dimen name="chat_feedback_divider_width">1dp</dimen>
+    <dimen name="chat_feedback_divider_margin_horizontal">2dp</dimen>
+
+    <!-- help prompt dialog -->
+    <dimen name="view_help_prompt_padding">15dp</dimen>
+    <dimen name="view_help_prompt_title_fontsize">15sp</dimen>
+    <dimen name="view_help_prompt_title_margin_bottom">4dp</dimen>
+    <dimen name="view_help_prompt_title_padding">7dp</dimen>
+    <dimen name="view_help_prompt_command_fontsize">13sp</dimen>
+    <dimen name="view_help_prompt_command_list_margin_bottom">8dp</dimen>
+    <dimen name="view_help_prompt_command_list_height">30dp</dimen>
+    <dimen name="view_help_prompt_command_listitem_textsize">12sp</dimen>
+    <dimen name="view_help_prompt_command_listitem_height">30dp</dimen>
+    <dimen name="view_help_prompt_command_listitem_padding_horizontal">10dp</dimen>
+    <dimen name="view_help_prompt_edittext_round_size">5dp</dimen>
+    <dimen name="view_help_prompt_edittext_stroke_width">1dp</dimen>
+    <dimen name="view_help_prompt_edittext_padding_start">10dp</dimen>
+    <dimen name="view_help_prompt_edittext_fontsize">13sp</dimen>
+    <dimen name="view_help_prompt_key_edittext_minheight">30dp</dimen>
+    <dimen name="view_help_prompt_key_edittext_margin_bottom">5dp</dimen>
 
 </resources>
