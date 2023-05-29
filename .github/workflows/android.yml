@@ -12,34 +12,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+      - uses: actions/checkout@v3
+      - name: set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
 
-    - name: Create file
-      run: cat /home/runner/work/risingandroid/risingandroid/app/google-services.json | base64
+      - name: Create file
+        run: cat /home/runner/work/RisingPhone/RisingPhone/app/google-services.json | base64
 
-    - name: Putting data
-      env:
-        DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      run: echo $DATA > /home/runner/work/risingandroid/risingandroid/app/google-services.json
+      - name: Putting data
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA > /home/runner/work/RisingPhone/RisingPhone/app/google-services.json
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    # Run Tests Build
-    - name: Run gradle tests
-      run: ./gradlew test
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      # Run Tests Build
+      - name: Run gradle tests
+        run: ./gradlew test
 
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Build with Gradle
+        run: ./gradlew build
 
-    - name: Archive lint results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: lint-report
-        path: app/build/reports/lint-results-debug.html
+      - name: Archive lint results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-debug.html
