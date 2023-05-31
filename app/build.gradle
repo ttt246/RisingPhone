@@ -14,7 +14,7 @@ android {
         minSdk 28
         targetSdk 33
         versionCode 1
-        versionName "1.4"
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -102,4 +102,6 @@ dependencies {
     implementation "androidx.room:room-guava:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.room:room-paging:$room_version"
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

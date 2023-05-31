@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_search_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/view_search_contact_bgcolor"
+        app:cardCornerRadius="@dimen/view_search_contact_corner_radius"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/view_search_contact_padding_horizontal"
+            android:paddingTop="@dimen/view_search_contact_padding_top"
+            android:paddingBottom="@dimen/view_search_contact_padding_bottom">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_avatar"
+                android:layout_width="@dimen/view_search_contact_info_avatar_width"
+                android:layout_height="@dimen/view_search_contact_info_avatar_height"
+                android:src="@drawable/img_test"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:civ_border_color="@color/view_search_contact_avatar_border_color"
+                app:civ_border_width="@dimen/view_search_contact_info_avatar_border_width"/>
+
+
+            <TextView
+                android:id="@+id/tv_info_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/view_search_contact_info_avatar_text_space_size"
+                android:textColor="@color/view_search_contact_info_text_color"
+                android:textSize="@dimen/view_search_contact_info_text_font_size"
+                app:layout_constraintEnd_toEndOf="@+id/civ_avatar"
+                app:layout_constraintStart_toStartOf="@+id/civ_avatar"
+                app:layout_constraintTop_toBottomOf="@+id/civ_avatar" />
+
+
+            <TextView
+                android:id="@+id/tv_info_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/view_search_contact_info_text_color"
+                android:textSize="@dimen/view_search_contact_info_text_font_size"
+                app:layout_constraintEnd_toEndOf="@+id/civ_avatar"
+                app:layout_constraintStart_toStartOf="@+id/civ_avatar"
+                app:layout_constraintTop_toBottomOf="@+id/tv_info_name" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_control_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/view_search_contact_info_text_button_space_size"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/civ_avatar"
+                app:layout_constraintStart_toStartOf="@+id/civ_avatar"
+                app:layout_constraintTop_toBottomOf="@+id/tv_info_phone_number">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/btn_video_call"
+                    android:layout_width="@dimen/view_search_contact_control_button_width"
+                    android:layout_height="@dimen/view_search_contact_control_button_height"
+                    android:layout_marginRight="@dimen/view_search_contact_control_button_space"
+                    android:background="@drawable/background_search_contact_common_button"
+                    android:padding="@dimen/view_search_contact_control_button_padding"
+                    android:src="@drawable/ic_video"
+                    android:tint="@color/view_search_contact_control_button_color" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/btn_voice_call"
+                    android:layout_width="@dimen/view_search_contact_control_button_width"
+                    android:layout_height="@dimen/view_search_contact_control_button_height"
+                    android:layout_marginRight="@dimen/view_search_contact_control_button_space"
+                    android:background="@drawable/background_search_contact_common_button"
+                    android:padding="@dimen/view_search_contact_control_button_padding"
+                    android:src="@drawable/ic_phone"
+                    android:tint="@color/view_search_contact_control_button_color" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/btn_message"
+                    android:layout_width="@dimen/view_search_contact_control_button_width"
+                    android:layout_height="@dimen/view_search_contact_control_button_height"
+                    android:layout_marginRight="@dimen/view_search_contact_control_button_space"
+                    android:background="@drawable/background_search_contact_common_button"
+                    android:padding="@dimen/view_search_contact_control_button_padding"
+                    android:src="@drawable/ic_message_text"
+                    android:tint="@color/view_search_contact_control_button_color" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/btn_goto_contact"
+                    android:layout_width="@dimen/view_search_contact_control_button_width"
+                    android:layout_height="@dimen/view_search_contact_control_button_height"
+                    android:background="@drawable/background_search_contact_common_button"
+                    android:padding="@dimen/view_search_contact_control_button_padding"
+                    android:src="@drawable/ic_arrow_right_thick"
+                    android:tint="@color/view_search_contact_control_button_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ll_control_button" />
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

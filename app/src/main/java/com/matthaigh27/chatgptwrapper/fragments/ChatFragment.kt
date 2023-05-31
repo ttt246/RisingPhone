@@ -19,6 +19,8 @@ import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.provider.ContactsContract
 import android.provider.MediaStore
+import android.telecom.TelecomManager
+import android.telecom.VideoProfile
 import android.telephony.SmsManager
 import android.util.Log
 import android.view.KeyEvent
@@ -36,7 +38,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.matthaigh27.chatgptwrapper.MyApplication
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.adapters.ChatAdapter
-import com.matthaigh27.chatgptwrapper.database.database.ImageDatabase
+import com.matthaigh27.chatgptwrapper.database.MyDatabase
 import com.matthaigh27.chatgptwrapper.database.entity.ImageEntity
 import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog
 import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog.OnPositiveButtonClickListener
@@ -44,7 +46,6 @@ import com.matthaigh27.chatgptwrapper.models.*
 import com.matthaigh27.chatgptwrapper.models.common.ContactModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpPromptModel
-import com.matthaigh27.chatgptwrapper.models.common.ImagePromptModel
 import com.matthaigh27.chatgptwrapper.models.viewmodels.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.services.api.HttpClient
 import com.matthaigh27.chatgptwrapper.services.api.HttpRisingInterface
@@ -108,7 +109,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
     )
 
-    var mRoomDataHandler: ImageDatabase? = null
+    var mRoomDataHandler: MyDatabase? = null
 
     private var mContext: Context? = null
 
@@ -129,9 +130,8 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         initView()
         initDatabase()
 
-        requestExternalStorage()
-        requestContactsPermission()
-        requestSmsPermission()
+        fetchImages()
+        getContacts()
 
         getAllPromptCommands()
     }
@@ -217,41 +217,8 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     }
 
     private fun initDatabase() {
-        mRoomDataHandler = ImageDatabase.getDatabase(mContext!!)
+        mRoomDataHandler = MyDatabase.getDatabase(mContext!!)
     }
-
-    @SuppressLint("UseRequireInsteadOfGet")
-    private fun requestExternalStorage() {
-        if (ContextCompat.checkSelfPermission(
-                mContext!!, Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                activity!!,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            fetchImages()
-        }
-    }
-
-    @SuppressLint("UseRequireInsteadOfGet")
-    fun requestContactsPermission() {
-        if (ActivityCompat.checkSelfPermission(
-                mContext!!, Manifest.permission.READ_CONTACTS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                activity!!,
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                CONTACTS_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            getContacts()
-        }
-    }
-
 
     /**
      * set loading spinner visible
@@ -737,34 +704,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                 listOfImageUris.add(contentUri)
             }
         }
-
         return listOfImageUris
-    }
-
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    ) {
-        when (requestCode) {
-            EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fetchImages()
-                }
-                return
-            }
-            CONTACTS_PERMISSION_REQUEST_CODE -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    getContacts()
-                }
-            }
-            SMS_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // You can send an SMS now
-                } else {
-                    // Permission denied
-                }
-            }
-        }
     }
 
     /**
@@ -793,7 +733,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                 var existFlag = false
                 val path = getRealPathFromUri(mContext!!, uri)
                 for (i in originalImages.indices) {
-                    val entity:ImageEntity = originalImages[i]
+                    val entity: ImageEntity = originalImages[i]
                     if (entity.path == path) {
                         existFlag = true
                         break
@@ -861,20 +801,15 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     }
 
     fun sendSms(phoneNumber: String, message: String) {
-        val smsManager = SmsManager.getDefault()
-        val parts = smsManager.divideMessage(message)
-        smsManager.sendMultipartTextMessage(phoneNumber, null, parts, null, null)
-        showToast("Sent SMS")
-    }
-
-    @SuppressLint("UseRequireInsteadOfGet")
-    fun requestSmsPermission() {
-        val permission = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.SEND_SMS)
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                activity!!, arrayOf(Manifest.permission.SEND_SMS), SMS_PERMISSION_REQUEST_CODE
-            )
+        try {
+            val smsManager = SmsManager.getDefault()
+            val parts = smsManager.divideMessage(message)
+            smsManager.sendMultipartTextMessage(phoneNumber, null, parts, null, null)
+            showToast("Sent SMS")
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

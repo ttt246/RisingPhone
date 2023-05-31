@@ -131,7 +131,7 @@
     <dimen name="chat_feedback_divider_width">1dp</dimen>
     <dimen name="chat_feedback_divider_margin_horizontal">2dp</dimen>
 
-    <!-- help prompt dialog -->
+    <!-- help prompt widget -->
     <dimen name="view_help_prompt_padding">15dp</dimen>
     <dimen name="view_help_prompt_title_fontsize">15sp</dimen>
     <dimen name="view_help_prompt_title_margin_bottom">4dp</dimen>
@@ -148,5 +148,23 @@
     <dimen name="view_help_prompt_edittext_fontsize">13sp</dimen>
     <dimen name="view_help_prompt_key_edittext_minheight">30dp</dimen>
     <dimen name="view_help_prompt_key_edittext_margin_bottom">5dp</dimen>
+
+    <!-- search contact widget -->
+    <dimen name="view_search_contact_padding_top">15dp</dimen>
+    <dimen name="view_search_contact_padding_bottom">10dp</dimen>
+    <dimen name="view_search_contact_padding_horizontal">8dp</dimen>
+    <dimen name="view_search_contact_corner_radius">10dp</dimen>
+    <dimen name="view_search_contact_info_avatar_width">100dp</dimen>
+    <dimen name="view_search_contact_info_avatar_height">100dp</dimen>
+    <dimen name="view_search_contact_info_avatar_border_width">2dp</dimen>
+    <dimen name="view_search_contact_info_avatar_radius">100dp</dimen>
+    <dimen name="view_search_contact_info_text_font_size">13sp</dimen>
+    <dimen name="view_search_contact_info_avatar_text_space_size">5dp</dimen>
+    <dimen name="view_search_contact_info_text_button_space_size">7dp</dimen>
+    <dimen name="view_search_contact_control_button_width">30dp</dimen>
+    <dimen name="view_search_contact_control_button_height">30dp</dimen>
+    <dimen name="view_search_contact_control_button_space">10dp</dimen>
+    <dimen name="view_search_contact_control_button_padding">8dp</dimen>
+    <dimen name="view_search_contact_control_button_radius">10dp</dimen>
 
 </resources>

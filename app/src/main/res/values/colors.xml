@@ -75,7 +75,7 @@
     <color name="dialog_image_picker_icon_color">@color/white</color>
     <color name="dialog_image_picker_text_color">@color/white</color>
 
-    <!-- help promppt dialog -->
+    <!-- help promppt view -->
     <color name="view_help_prompt_bgcolor">@color/transparent</color>
     <color name="view_help_prompt_common_textcolor">@color/primary_light</color>
     <color name="view_help_prompt_command_hint">@color/grey_200</color>
@@ -83,5 +83,12 @@
     <color name="view_help_prompt_command_listitem_textcolor">@color/white</color>
     <color name="view_help_prompt_edittext_stroke_color">@color/primary_light</color>
     <color name="view_help_prompt_edittext_hint_color">@color/grey_200</color>
+
+    <!-- help promppt view -->
+    <color name="view_search_contact_bgcolor">@color/white</color>
+    <color name="view_search_contact_avatar_border_color">@color/primary</color>
+    <color name="view_search_contact_info_text_color">@color/primary</color>
+    <color name="view_search_contact_control_button_bg_color">@color/primary</color>
+    <color name="view_search_contact_control_button_color">@color/white</color>
 
 </resources>
