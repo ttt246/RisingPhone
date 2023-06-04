@@ -18,12 +18,14 @@ public class Constants {
     public static String RESPONSE_TYPE_IMAGE = "image";
     public static String RESPONSE_TYPE_HELP_COMMAND = "help_command";
     public static String RESPONSE_TYPE_SMS = "sms";
+    public static String RESPONSE_TYPE_CONTACT = "contact";
 
     /**
      * message widget type
      */
     public static String MSG_WIDGET_TYPE_SMS = "SMS";
     public static String MSG_WIDGET_TYPE_HELP_PRMOPT = "HELP_PROMPT";
+    public static String MSG_WIDGET_TYPE_SEARCH_CONTACT = "SEARCH_CONTACT";
 
     /**
      * okhttp server url

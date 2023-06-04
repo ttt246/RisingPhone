@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/view_contact_detail_min_height"
+    android:background="@color/view_contact_detail_bg_color">
+
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_contact_detail_avatar_height"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_avatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btn_edit_contact"
+        android:layout_width="@dimen/view_contact_detail_edit_button_width"
+        android:layout_height="@dimen/view_contact_detail_edit_button_height"
+        android:layout_marginTop="@dimen/view_contact_detail_edit_button_margin_top"
+        android:layout_marginEnd="@dimen/view_contact_detail_edit_button_margin_end"
+        android:src="@drawable/ic_pencil"
+        android:padding="@dimen/view_contact_detail_edit_button_padding"
+        app:layout_constraintEnd_toEndOf="@+id/iv_avatar"
+        app:layout_constraintTop_toTopOf="@+id/iv_avatar"
+        app:tint="@color/view_contact_detail_edit_button_color" />
+
+    <TextView
+        android:id="@+id/tv_displayname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/view_contact_detail_name_margin_start"
+        android:layout_marginBottom="@dimen/view_contact_detail_name_margin_bottom"
+        android:text="Peter Luo"
+        android:textColor="@color/view_contact_detail_name_text_color"
+        android:textSize="@dimen/view_contact_detail_name_text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_avatar"
+        app:layout_constraintStart_toStartOf="@+id/iv_avatar" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/view_contact_detail_phones_cardview_margin"
+        app:cardElevation="@dimen/view_contact_detail_phones_cardview_elevation"
+        app:layout_constraintTop_toBottomOf="@+id/iv_avatar">
+
+        <LinearLayout
+            android:id="@+id/ll_contacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

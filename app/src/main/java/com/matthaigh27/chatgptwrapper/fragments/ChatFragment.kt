@@ -5,11 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ActionBar.LayoutParams
 import android.content.*
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -18,9 +16,8 @@ import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.provider.ContactsContract
+import android.provider.ContactsContract.Contacts
 import android.provider.MediaStore
-import android.telecom.TelecomManager
-import android.telecom.VideoProfile
 import android.telephony.SmsManager
 import android.util.Log
 import android.view.KeyEvent
@@ -30,8 +27,6 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
@@ -39,6 +34,7 @@ import com.matthaigh27.chatgptwrapper.MyApplication
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.adapters.ChatAdapter
 import com.matthaigh27.chatgptwrapper.database.MyDatabase
+import com.matthaigh27.chatgptwrapper.database.entity.ContactEntity
 import com.matthaigh27.chatgptwrapper.database.entity.ImageEntity
 import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog
 import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog.OnPositiveButtonClickListener
@@ -51,6 +47,7 @@ import com.matthaigh27.chatgptwrapper.services.api.HttpClient
 import com.matthaigh27.chatgptwrapper.services.api.HttpRisingInterface
 import com.matthaigh27.chatgptwrapper.utils.Constants.*
 import com.matthaigh27.chatgptwrapper.utils.Utils
+import com.matthaigh27.chatgptwrapper.widgets.ContactDetailItem
 import com.qw.photo.CoCo
 import com.qw.photo.callback.CoCoAdapter
 import com.qw.photo.callback.CoCoCallBack
@@ -61,6 +58,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.*
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
@@ -115,6 +113,8 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
 
     private var mIsExistWidget: Boolean = false
 
+    private var mSMSOnClickListener: ContactDetailItem.OnSMSClickListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -131,9 +131,19 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         initDatabase()
 
         fetchImages()
-        getContacts()
 
         getAllPromptCommands()
+        trainContacts()
+    }
+
+    private fun trainContacts() {
+        showLoading(true, "Train Contacts")
+        val contacts = Utils.instance.getContacts(mContext!!)
+        CoroutineScope(Dispatchers.Main).launch {
+            val changedContacts = Utils.instance.getChangedContacts(contacts, mRoomDataHandler!!)
+            httpClient.trainContacts(changedContacts)
+        }
+
     }
 
     private fun getAllPromptCommands() {
@@ -154,10 +164,24 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         rotate.interpolator = LinearInterpolator()
 
         mContext = context
+        mSMSOnClickListener = object: ContactDetailItem.OnSMSClickListener {
+            override fun onSMSClickListener(phoneNumber: String) {
+                addMessage(
+                    "SMS", false, false, true, MSG_WIDGET_TYPE_SMS, phoneNumber
+                )
+            }
+
+            override fun onVoiceCallListener(phoneNumber: String, toName: String) {
+                addMessage(
+                    "You made a voice call to $toName($phoneNumber)", false, false
+                )
+            }
+        }
     }
 
     private fun initView() {
         this.mAdapter = ChatAdapter(mMessageList, mContext!!)
+        this.mAdapter.mOnSMSClickListener = mSMSOnClickListener
         mRvChatList = rootView.findViewById<View>(R.id.chatRecycleView) as RecyclerView
         mRvChatList.adapter = mAdapter
 
@@ -322,13 +346,10 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                 when (command.mainCommandName) {
                     "sms" -> {
                         addMessage(
-                            "SMS",
-                            false,
-                            false,
-                            true,
-                            MSG_WIDGET_TYPE_SMS
+                            "SMS", false, false, true, MSG_WIDGET_TYPE_SMS
                         )
                     }
+
                     else -> {
                         mHelpPromptList!!.forEach { model ->
                             if (model.name == command.mainCommandName) {
@@ -350,9 +371,8 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                 }
             } else {
                 if (command.assistCommandName == "all") {
-                    val usage = "usage:\n" +
-                            "- help command: /help [command name]\n" +
-                            "- prompt command: /<command name>\n\n"
+                    val usage =
+                        "usage:\n" + "- help command: /help [command name]\n" + "- prompt command: /<command name>\n\n"
                     var strHelpList = "help prompt commands:"
                     mHelpPromptList!!.forEach { model ->
                         strHelpList += "\n- " + model.name
@@ -403,7 +423,9 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     ) {
         if ((message == "" && mSelectedImage == null) || mIsExistWidget) return
         if (isWidget == true) {
-            mIsExistWidget = true
+            if(widgetType != MSG_WIDGET_TYPE_SEARCH_CONTACT) {
+                mIsExistWidget = true
+            }
         }
 
         val msg = ChatMessageModel()
@@ -464,14 +486,17 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             R.id.btn_send_message -> {
                 addMessage(mEtMessage.text.toString(), true)
             }
+
             R.id.btn_image_upload -> {
                 mImagePickerType = PICKERTYPE_IMAGE_UPLOAD
                 mImagePickerDlg.show()
             }
+
             R.id.btn_image_picker -> {
                 mImagePickerType = PICKERTYPE_IMAGE_PICK
                 mImagePickerDlg.show()
             }
+
             R.id.btn_cancel_load_photo -> {
                 mLlLoadPhoto.visibility = View.GONE
                 mSelectedImageName = ""
@@ -619,6 +644,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                         openBrowser(json.getString(RESPONSE_TYPE_URL))
                         return
                     }
+
                     RESPONSE_TYPE_ALERT -> {
                         MyApplication.appContext.showNotification(
                             json.getString(
@@ -627,10 +653,12 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                         )
                         return
                     }
+
                     RESPONSE_TYPE_MESSAGE -> {
                         addMessage(json.getString(RESPONSE_TYPE_CONTENT), false)
                         return
                     }
+
                     RESPONSE_TYPE_IMAGE -> {
                         try {
                             val imageRes = JSONObject(json.getString(RESPONSE_TYPE_CONTENT))
@@ -653,6 +681,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                         }
                         return
                     }
+
                     RESPONSE_TYPE_SMS -> {
                         addMessage(
                             json.getString(RESPONSE_TYPE_CONTENT),
@@ -662,6 +691,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                             MSG_WIDGET_TYPE_SMS
                         )
                     }
+
                     RESPONSE_TYPE_HELP_COMMAND -> {
                         try {
                             mHelpPromptList = Utils.instance.getHelpCommandListFromJsonString(
@@ -670,6 +700,21 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                         } catch (e: java.lang.Exception) {
                             e.printStackTrace()
                             showToast("JSON Error occured")
+                        }
+                    }
+
+                    RESPONSE_TYPE_CONTACT -> {
+                        try {
+                            addMessage(
+                                "Contacts that you are looking for.",
+                                false,
+                                false,
+                                true,
+                                MSG_WIDGET_TYPE_SEARCH_CONTACT,
+                                json.getString(RESPONSE_TYPE_CONTENT)
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 }
@@ -682,6 +727,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
 
     override fun onFailureResult(msg: String) {
         showLoading(false)
+
         showToast(msg)
     }
 
@@ -760,43 +806,6 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             cursor.getString(column_index)
         } finally {
             cursor?.close()
-        }
-    }
-
-    @SuppressLint("Range")
-    fun getContacts() {
-        val contacts = mutableListOf<ContactModel>()
-
-        val contentResolver = mContext!!.contentResolver
-        val contactsUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-        val projection = arrayOf(
-            ContactsContract.CommonDataKinds.Phone._ID,
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-            ContactsContract.CommonDataKinds.Phone.NUMBER
-        )
-
-        val cursor = contentResolver.query(contactsUri, projection, null, null, null)
-
-        cursor?.let {
-            while (it.moveToNext()) {
-                val id = it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID))
-                val name =
-                    it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
-                val phoneNumber =
-                    it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-
-                val contact = ContactModel(id, name, phoneNumber)
-                contacts.add(contact)
-            }
-            cursor.close()
-        }
-
-        // Use the fetched contacts data
-        for (contact in contacts) {
-            Log.i(
-                "$TAG ContactInfo",
-                "ID: ${contact.id}, Name: ${contact.name}, Phone Number: ${contact.phoneNumber}"
-            )
         }
     }
 

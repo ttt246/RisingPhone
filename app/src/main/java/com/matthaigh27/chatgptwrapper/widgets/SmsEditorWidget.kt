@@ -56,6 +56,10 @@ class SmsEditorWidget(
         }
     }
 
+    fun setToUserName(name: String) {
+        etToName.setText(name)
+    }
+
     fun hide() {
         this.visibility = View.GONE
         etToName.setText("")

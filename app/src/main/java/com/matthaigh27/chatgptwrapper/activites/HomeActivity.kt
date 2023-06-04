@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.fragments.ChatFragment
 import com.matthaigh27.chatgptwrapper.utils.Constants.REQUEST_PERMISSION_CODE

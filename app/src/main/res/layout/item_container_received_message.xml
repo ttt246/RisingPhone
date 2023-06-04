@@ -75,13 +75,30 @@
         </LinearLayout>
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/ll_message_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/chat_message_widget_margin_top"
+        android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/ll_msg"
-        app:layout_constraintTop_toBottomOf="@+id/ll_msg"></FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/chat_message_widget_margin_top"
+        app:layout_constraintStart_toStartOf="@+id/ll_msg"
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg">
+        <LinearLayout
+            android:id="@+id/ll_contacts_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_message_widget_margin_top"
+            android:orientation="horizontal"
+            android:visibility="gone" />
+    </HorizontalScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

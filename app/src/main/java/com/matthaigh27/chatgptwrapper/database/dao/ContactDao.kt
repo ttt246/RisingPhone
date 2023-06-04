@@ -16,5 +16,5 @@ interface ContactDao {
     suspend fun deleteContact(contact: ContactEntity)
 
     @Query("SELECT * FROM contacts")
-    fun getAllImages(): List<ContactEntity>
+    fun getAllContacts(): List<ContactEntity>
 }

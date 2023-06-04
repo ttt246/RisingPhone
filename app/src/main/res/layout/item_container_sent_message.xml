@@ -34,13 +34,14 @@
             android:textSize="@dimen/chat_message_item_fontsize" />
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/ll_message_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/chat_message_widget_margin_top"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/ll_msg"
-        app:layout_constraintTop_toBottomOf="@+id/ll_msg" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg"
+        android:orientation="horizontal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

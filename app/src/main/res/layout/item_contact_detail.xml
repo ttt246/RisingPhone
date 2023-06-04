@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="@dimen/item_contact_detail_padding">
+
+    <ImageView
+        android:id="@+id/btn_voice_call"
+        android:layout_width="@dimen/item_contact_detail_icon_width"
+        android:layout_height="@dimen/item_contact_detail_icon_height"
+        android:padding="@dimen/item_contact_detail_icon_padding"
+        android:src="@drawable/ic_phone"
+        app:tint="@color/item_contact_detail_icon_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btn_send_message"
+        android:layout_width="@dimen/item_contact_detail_icon_height"
+        android:layout_height="@dimen/item_contact_detail_icon_width"
+        android:padding="@dimen/item_contact_detail_icon_padding"
+        android:src="@drawable/ic_message_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/item_contact_detail_icon_color" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/item_contact_detail_phone_info_margin_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/btn_send_message"
+        app:layout_constraintStart_toEndOf="@+id/btn_voice_call">
+
+        <TextView
+            android:id="@+id/tv_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(234)234-2344"
+            android:textColor="@color/item_contact_detail_phone_number"
+            android:textSize="@dimen/item_contact_detail_phone_info_text_size"
+            android:layout_marginBottom="@dimen/item_contact_detail_phone_number_type_space"/>
+
+        <TextView
+            android:id="@+id/tv_phone_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mobile"
+            android:textColor="@color/item_contact_detail_phone_type"
+            android:textSize="@dimen/item_contact_detail_phone_info_text_size"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

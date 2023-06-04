@@ -38,6 +38,11 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
     private fun initView() {
         inflate(context, R.layout.view_help_prompt, this)
 
+        layoutParams = LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
         mLlPromptKeys = findViewById(R.id.ll_prompt_keys)
         mTvKeysTitle = findViewById(R.id.tv_keys_title)
         mTvKeysTitle.setText(mModel.name)
