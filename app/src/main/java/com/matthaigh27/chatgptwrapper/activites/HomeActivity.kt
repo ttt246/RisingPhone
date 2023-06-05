@@ -3,51 +3,62 @@ package com.matthaigh27.chatgptwrapper.activites
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.tabs.TabLayout.TabGravity
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.fragments.ChatFragment
-import com.matthaigh27.chatgptwrapper.utils.Constants.REQUEST_PERMISSION_CODE
+import java.io.File
 
 
 class HomeActivity : AppCompatActivity() {
 
-    val requestPermissionList = arrayOf(
+    private val PERMISSIONS_REQUEST_CODE = 1
+
+    private val PERMISSIONS = arrayOf(
         Manifest.permission.SEND_SMS,
         Manifest.permission.READ_CONTACTS,
-        Manifest.permission.CALL_PHONE
+        Manifest.permission.CALL_PHONE,
+        Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        if (arePermissionsGranted()) {
-            navigateToChatFragment()
-        } else {
-            requestPermissions()
-        }
+        requestPermission()
     }
 
-    private fun arePermissionsGranted(): Boolean {
-        requestPermissionList.forEach { permissionName ->
-            val permission = ContextCompat.checkSelfPermission(this@HomeActivity, permissionName)
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                return false
+    private fun requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val notGrantedPermissions = PERMISSIONS.filter {
+                checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
             }
-        }
-        return true
-    }
 
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            requestPermissionList,
-            REQUEST_PERMISSION_CODE
-        )
+            if (notGrantedPermissions.isNotEmpty()) {
+                if (shouldShowRequestPermissionRationale(notGrantedPermissions[0])) {
+                    // show custom permission rationale
+                    AlertDialog.Builder(this)
+                        .setMessage("This app requires SMS, Contacts and Phone permissions to function properly. Please grant the necessary permissions.")
+                        .setPositiveButton("Grant Permissions") { _, _ ->
+                            requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
+                        }
+                        .setNegativeButton("Cancel") { _, _ -> }
+                        .show()
+                } else {
+                    requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
+                }
+            } else {
+                // Permissions already granted, navigate to your desired fragment
+                navigateToChatFragment()
+            }
+        } else {
+            // Permissions already granted for pre-M devices, navigate to your desired fragment
+            navigateToChatFragment()
+        }
     }
 
     private fun navigateToChatFragment() {
@@ -57,18 +68,24 @@ class HomeActivity : AppCompatActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         when (requestCode) {
-            REQUEST_PERMISSION_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+            PERMISSIONS_REQUEST_CODE -> {
+                if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    // Permissions granted, navigate to your desired fragment
                     navigateToChatFragment()
                 } else {
-                    finish()
+                    Log.v("rising", "hello")
+                    requestPermission()
                 }
+                return
             }
         }
     }
 }
+
 
 
