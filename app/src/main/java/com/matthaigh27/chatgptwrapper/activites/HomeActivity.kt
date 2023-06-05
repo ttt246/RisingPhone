@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout.TabGravity
 import com.matthaigh27.chatgptwrapper.R
+import com.matthaigh27.chatgptwrapper.dialogs.CommonConfirmDialog
 import com.matthaigh27.chatgptwrapper.fragments.ChatFragment
 import java.io.File
 
@@ -41,13 +42,19 @@ class HomeActivity : AppCompatActivity() {
             if (notGrantedPermissions.isNotEmpty()) {
                 if (shouldShowRequestPermissionRationale(notGrantedPermissions[0])) {
                     // show custom permission rationale
-                    AlertDialog.Builder(this)
-                        .setMessage("This app requires SMS, Contacts and Phone permissions to function properly. Please grant the necessary permissions.")
-                        .setPositiveButton("Grant Permissions") { _, _ ->
+                    val confirmDialog = CommonConfirmDialog(this)
+                    confirmDialog.setMessage("This app requires SMS, Contacts and Phone permissions to function properly. Please grant the necessary permissions.")
+                    confirmDialog.setOnClickListener(object :
+                        CommonConfirmDialog.OnConfirmButtonClickListener {
+                        override fun onPositiveButtonClick() {
                             requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
                         }
-                        .setNegativeButton("Cancel") { _, _ -> }
-                        .show()
+
+                        override fun OnNegativeButtonClick() {
+                            finish()
+                        }
+                    })
+                    confirmDialog.show()
                 } else {
                     requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
                 }

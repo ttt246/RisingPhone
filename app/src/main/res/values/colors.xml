@@ -20,6 +20,7 @@
     <color name="grey_300">#7C828F</color>
     <color name="grey_400">#f5f5f5</color>
     <color name="grey_500">#222222</color>
+    <color name="grey_600">#444444</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -102,5 +103,11 @@
     <color name="view_contact_detail_bg_color">@color/grey_400</color>
     <color name="view_contact_detail_edit_button_color">@color/white</color>
     <color name="view_contact_detail_name_text_color">@color/white</color>
+
+    <!-- common confirm dialog -->
+    <color name="dialog_common_confirm_bg_color">@color/white</color>
+    <color name="dialog_common_confirm_text_color">@color/grey_600</color>
+    <color name="dialog_common_confirm_button_bg_color">@color/transparent</color>
+    <color name="dialog_common_confirm_button_text_color">@color/primary_light</color>
 
 </resources>
