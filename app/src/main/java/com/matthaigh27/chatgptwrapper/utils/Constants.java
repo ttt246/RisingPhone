@@ -18,12 +18,14 @@ public class Constants {
     public static String RESPONSE_TYPE_IMAGE = "image";
     public static String RESPONSE_TYPE_HELP_COMMAND = "help_command";
     public static String RESPONSE_TYPE_SMS = "sms";
+    public static String RESPONSE_TYPE_CONTACT = "contact";
 
     /**
      * message widget type
      */
     public static String MSG_WIDGET_TYPE_SMS = "SMS";
     public static String MSG_WIDGET_TYPE_HELP_PRMOPT = "HELP_PROMPT";
+    public static String MSG_WIDGET_TYPE_SEARCH_CONTACT = "SEARCH_CONTACT";
 
     /**
      * okhttp server url
@@ -55,9 +57,7 @@ public class Constants {
     public static String LOADING_ANALYZING_IMAGE = "Analyzing Image";
     public static String LOADING_DOWNLOADING_IMAGE = "Downloading Image";
 
-    public static Integer EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 0;
-    public static Integer CONTACTS_PERMISSION_REQUEST_CODE = 1;
-    public static Integer SMS_PERMISSION_REQUEST_CODE = 100;
+    public static Integer REQUEST_PERMISSION_CODE = 1;
 
     public static String HELP_COMMAND_ERROR_NO_MAIN = "no main command";
     public static String HELP_COMMAND_ERROR_NO_INVALID_FORMAT = "Invalid Command Format";

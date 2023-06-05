@@ -19,6 +19,7 @@
     <color name="grey_200">#a0a0a0</color>
     <color name="grey_300">#7C828F</color>
     <color name="grey_400">#f5f5f5</color>
+    <color name="grey_500">#222222</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -33,6 +34,7 @@
 
     <!-- chat main interface -->
     <color name="chat_content_top_bgcolor">@color/white</color>
+    <color name="fragment_chat_bg_color">@color/primary</color>
 
     <!-- chat RecyclerView -->
     <color name="sent_message_background">@color/primary</color>
@@ -75,7 +77,7 @@
     <color name="dialog_image_picker_icon_color">@color/white</color>
     <color name="dialog_image_picker_text_color">@color/white</color>
 
-    <!-- help promppt dialog -->
+    <!-- help promppt view -->
     <color name="view_help_prompt_bgcolor">@color/transparent</color>
     <color name="view_help_prompt_common_textcolor">@color/primary_light</color>
     <color name="view_help_prompt_command_hint">@color/grey_200</color>
@@ -83,5 +85,22 @@
     <color name="view_help_prompt_command_listitem_textcolor">@color/white</color>
     <color name="view_help_prompt_edittext_stroke_color">@color/primary_light</color>
     <color name="view_help_prompt_edittext_hint_color">@color/grey_200</color>
+
+    <!-- help promppt view -->
+    <color name="view_search_contact_bgcolor">@color/white</color>
+    <color name="view_search_contact_avatar_border_color">@color/primary</color>
+    <color name="view_search_contact_info_text_color">@color/primary</color>
+    <color name="view_search_contact_control_button_bg_color">@color/primary</color>
+    <color name="view_search_contact_control_button_color">@color/white</color>
+
+    <!-- contact detail item -->
+    <color name="item_contact_detail_icon_color">@color/primary_light</color>
+    <color name="item_contact_detail_phone_number">@color/grey_500</color>
+    <color name="item_contact_detail_phone_type">@color/grey_300</color>
+
+    <!-- contact detail widget -->
+    <color name="view_contact_detail_bg_color">@color/grey_400</color>
+    <color name="view_contact_detail_edit_button_color">@color/white</color>
+    <color name="view_contact_detail_name_text_color">@color/white</color>
 
 </resources>

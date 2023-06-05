@@ -15,13 +15,20 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.matthaigh27.chatgptwrapper.R
+import com.matthaigh27.chatgptwrapper.models.common.ContactModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.models.viewmodels.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.utils.Constants.MSG_WIDGET_TYPE_HELP_PRMOPT
+import com.matthaigh27.chatgptwrapper.utils.Constants.MSG_WIDGET_TYPE_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.MSG_WIDGET_TYPE_SMS
 import com.matthaigh27.chatgptwrapper.utils.ImageHelper
+import com.matthaigh27.chatgptwrapper.utils.Utils
+import com.matthaigh27.chatgptwrapper.widgets.ContactDetailItem
+import com.matthaigh27.chatgptwrapper.widgets.ContactDetailWidget
 import com.matthaigh27.chatgptwrapper.widgets.HelpPromptWidget
+import com.matthaigh27.chatgptwrapper.widgets.SearchContactWidget
 import com.matthaigh27.chatgptwrapper.widgets.SmsEditorWidget
+import org.json.JSONArray
 
 class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -29,7 +36,8 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
     private var mChatModelList: ArrayList<ChatMessageModel> = ArrayList()
     private var mContext: Context
 
-    var mListener: MessageWidgetListener? = null
+    private var mListener: MessageWidgetListener? = null
+    var mOnSMSClickListener: ContactDetailItem.OnSMSClickListener? = null
 
     private val feedbackData = arrayOf(
         arrayOf(R.drawable.ic_thumb_up_disable, R.drawable.ic_thumb_down),
@@ -72,30 +80,30 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
          * Get the data model based on position
          */
         val index = holder.adapterPosition
-        val contact: ChatMessageModel = mChatModelList[index]
-        if (contact.isMe) {
-            setSentMessageData(holder as SendMessageViewHolder, contact)
+        val messageModel: ChatMessageModel = mChatModelList[index]
+        if (messageModel.isMe) {
+            setSentMessageData(holder as SendMessageViewHolder, messageModel)
         } else {
-            setReceiveMessageData(holder as ReceiveMessageViewHolder, contact)
+            setReceiveMessageData(holder as ReceiveMessageViewHolder, messageModel)
         }
     }
 
-    private fun setSentMessageData(holder: SendMessageViewHolder, contact: ChatMessageModel) {
+    private fun setSentMessageData(holder: SendMessageViewHolder, messageModel: ChatMessageModel) {
         /**
          * Set item views based on your views and data model
          */
-        if (contact.message.isEmpty()) {
+        if (messageModel.message.isEmpty()) {
             holder.textMessage.visibility = View.GONE
         } else {
-            holder.textMessage.text = contact.message
+            holder.textMessage.text = messageModel.message
             holder.textMessage.visibility = View.VISIBLE
         }
 
 
-        if (contact.image != null) {
+        if (messageModel.image != null) {
             val radius = mContext.resources.getDimensionPixelSize(R.dimen.chat_message_item_radius)
 
-            val originBmp = BitmapFactory.decodeByteArray(contact.image, 0, contact.image!!.size)
+            val originBmp = BitmapFactory.decodeByteArray(messageModel.image, 0, messageModel.image!!.size)
             val bmp = ImageHelper.getRoundedCornerBitmap(originBmp, radius)
             holder.imgMessage.visibility = View.VISIBLE
             holder.imgMessage.setImageBitmap(bmp)
@@ -106,11 +114,11 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
             holder.imgMessage.visibility = View.GONE
         }
 
-        if (contact.isWidget) {
-            when (contact.widgetType) {
+        if (messageModel.isWidget) {
+            when (messageModel.widgetType) {
                 MSG_WIDGET_TYPE_HELP_PRMOPT -> {
                     val model: HelpPromptModel =
-                        HelpPromptModel.initModelWithString(contact.widgetDescription)
+                        HelpPromptModel.initModelWithString(messageModel.widgetDescription)
                     val helpPromptWidget = HelpPromptWidget(mContext, model)
                     val helpPromptListener = object : HelpPromptWidget.OnHelpPromptListener {
                         override fun onSuccess(prompt: String) {
@@ -138,22 +146,22 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    fun setReceiveMessageData(holder: ReceiveMessageViewHolder, contact: ChatMessageModel) {
+    fun setReceiveMessageData(holder: ReceiveMessageViewHolder, messageModel: ChatMessageModel) {
         /**
          * Set item views based on your views and data model
          */
-        if (contact.message.isEmpty()) {
+        if (messageModel.message.isEmpty()) {
             holder.textMessage.visibility = View.GONE
         } else {
-            holder.textMessage.text = contact.message
+            holder.textMessage.text = messageModel.message
             holder.textMessage.visibility = View.VISIBLE
         }
 
 
-        if (contact.image != null) {
+        if (messageModel.image != null) {
             val radius = mContext.resources.getDimensionPixelSize(R.dimen.chat_message_item_radius)
 
-            val originBmp = BitmapFactory.decodeByteArray(contact.image, 0, contact.image!!.size)
+            val originBmp = BitmapFactory.decodeByteArray(messageModel.image, 0, messageModel.image!!.size)
             val bmp = ImageHelper.getRoundedCornerBitmap(originBmp, radius)
             holder.imgMessage.visibility = View.VISIBLE
             holder.imgMessage.setImageBitmap(bmp)
@@ -164,7 +172,7 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
             holder.imgMessage.visibility = View.GONE
         }
 
-        holder.llFeedback.visibility = if (contact.visibleFeedback) {
+        holder.llFeedback.visibility = if (messageModel.visibleFeedback) {
             View.VISIBLE
         } else {
             View.GONE
@@ -194,10 +202,14 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
             setThumb(holder)
         }
 
-        if (contact.isWidget) {
-            when (contact.widgetType) {
+        if (messageModel.isWidget) {
+            holder.llContactWidget.removeAllViews()
+            when (messageModel.widgetType) {
                 MSG_WIDGET_TYPE_SMS -> {
                     val smsWidget = SmsEditorWidget(mContext, null)
+                    if(messageModel.widgetDescription.isNotEmpty()) {
+                        smsWidget.setToUserName(messageModel.widgetDescription)
+                    }
                     holder.llMessageWidget.addView(smsWidget)
                     holder.llMessageWidget.visibility = View.VISIBLE
 
@@ -219,9 +231,25 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
 
                     smsWidget.setOnClickListener(smsListener)
                 }
+
+                MSG_WIDGET_TYPE_SEARCH_CONTACT -> {
+                    val contacts = Utils.instance.getContacts(mContext)
+
+                    val contactIds = JSONArray(messageModel.widgetDescription)
+                    for (i in 0 until contactIds.length()) {
+                        val contactId = contactIds[i].toString()
+                        val contact = Utils.instance.getContactModelById(contactId, contacts)
+
+                        val searchContactWidget = SearchContactWidget(mContext, contact, null)
+                        searchContactWidget.mSMSOnClickListener = mOnSMSClickListener
+                        holder.llContactWidget.addView(searchContactWidget)
+                    }
+                    holder.llContactWidget.visibility = View.VISIBLE
+                }
             }
         } else {
             holder.llMessageWidget.visibility = View.GONE
+            holder.llContactWidget.visibility = View.GONE
         }
     }
 
@@ -266,7 +294,8 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
         var btnThumbUp: ImageView
         var btnThumbDown: ImageView
         var itemLayout: ConstraintLayout
-        var llMessageWidget: FrameLayout
+        var llMessageWidget: LinearLayout
+        var llContactWidget: LinearLayout
 
         init {
             textMessage = itemView.findViewById<View>(R.id.textMessage) as TextView
@@ -275,7 +304,8 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
             btnThumbDown = itemView.findViewById<View>(R.id.btn_thumb_down) as ImageView
             llFeedback = itemView.findViewById<View>(R.id.ll_feedback) as LinearLayout
             itemLayout = itemView.findViewById<View>(R.id.cl_receive_message) as ConstraintLayout
-            llMessageWidget = itemView.findViewById<View>(R.id.ll_message_widget) as FrameLayout
+            llMessageWidget = itemView.findViewById<View>(R.id.ll_message_widget) as LinearLayout
+            llContactWidget = itemView.findViewById<View>(R.id.ll_contacts_widget) as LinearLayout
         }
     }
 
@@ -284,13 +314,13 @@ class ChatAdapter(list: ArrayList<ChatMessageModel>, context: Context) :
         var textMessage: TextView
         var imgMessage: ImageView
         var itemLayout: ConstraintLayout
-        var llMessageWidget: FrameLayout
+        var llMessageWidget: LinearLayout
 
         init {
             textMessage = itemView.findViewById<View>(R.id.textMessage) as TextView
             imgMessage = itemView.findViewById<View>(R.id.imgMessage) as ImageView
             itemLayout = itemView.findViewById<View>(R.id.cl_sent_message) as ConstraintLayout
-            llMessageWidget = itemView.findViewById<View>(R.id.ll_message_widget) as FrameLayout
+            llMessageWidget = itemView.findViewById<View>(R.id.ll_message_widget) as LinearLayout
         }
     }
 
