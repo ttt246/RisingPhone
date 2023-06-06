@@ -52,13 +52,15 @@ class CommonConfirmDialog(context: Context) : Dialog(context), View.OnClickListe
         mTvMessage?.text = mMessage
     }
 
+
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.btn_ok -> {
                 mClickListener.onPositiveButtonClick()
             }
+
             R.id.btn_cancel -> {
-                mClickListener.OnNegativeButtonClick()
+                mClickListener.onNegativeButtonClick()
             }
         }
 
@@ -67,6 +69,6 @@ class CommonConfirmDialog(context: Context) : Dialog(context), View.OnClickListe
 
     interface OnConfirmButtonClickListener {
         fun onPositiveButtonClick()
-        fun OnNegativeButtonClick()
+        fun onNegativeButtonClick()
     }
 }

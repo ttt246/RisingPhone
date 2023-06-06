@@ -49,15 +49,10 @@ public class Constants {
 
     public static String TAG = "risingandroid";
 
-    /**
-     * lading text
-     */
     public static String LOADING_ASKING_TO_GPT = "Asking To GPT";
     public static String LOADING_UPLOADING_IAMGE = "Uploading Image";
     public static String LOADING_ANALYZING_IMAGE = "Analyzing Image";
     public static String LOADING_DOWNLOADING_IMAGE = "Downloading Image";
-
-    public static Integer REQUEST_PERMISSION_CODE = 1;
 
     public static String HELP_COMMAND_ERROR_NO_MAIN = "no main command";
     public static String HELP_COMMAND_ERROR_NO_INVALID_FORMAT = "Invalid Command Format";

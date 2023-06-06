@@ -67,7 +67,7 @@ class HttpClient {
                     val json = JSONObject(myResponse)["result"].toString()
                     mCallback.onSuccessResult(json)
                 } catch (e: JSONException) {
-                    mCallback.onFailureResult("incorrect response format")
+                    mCallback.onFailureResult(myResponse)
                     e.printStackTrace()
                 }
             }

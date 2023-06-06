@@ -34,36 +34,33 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val notGrantedPermissions = PERMISSIONS.filter {
-                checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
-            }
+        val notGrantedPermissions = PERMISSIONS.filter {
+            checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
+        }
 
-            if (notGrantedPermissions.isNotEmpty()) {
-                if (shouldShowRequestPermissionRationale(notGrantedPermissions[0])) {
-                    // show custom permission rationale
-                    val confirmDialog = CommonConfirmDialog(this)
-                    confirmDialog.setMessage("This app requires SMS, Contacts and Phone permissions to function properly. Please grant the necessary permissions.")
-                    confirmDialog.setOnClickListener(object :
-                        CommonConfirmDialog.OnConfirmButtonClickListener {
-                        override fun onPositiveButtonClick() {
-                            requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
-                        }
+        if (notGrantedPermissions.isNotEmpty()) {
+            if (shouldShowRequestPermissionRationale(notGrantedPermissions[0])) {
+                // show custom permission rationale
+                val confirmDialog = CommonConfirmDialog(this)
+                confirmDialog.setMessage("This app requires SMS, Contacts and Phone permissions to function properly. Please grant the necessary permissions.")
+                confirmDialog.setOnClickListener(object :
+                    CommonConfirmDialog.OnConfirmButtonClickListener {
+                    override fun onPositiveButtonClick() {
+                        requestPermissions(
+                            notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE
+                        )
+                    }
 
-                        override fun OnNegativeButtonClick() {
-                            finish()
-                        }
-                    })
-                    confirmDialog.show()
-                } else {
-                    requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
-                }
+                    override fun onNegativeButtonClick() {
+                        finish()
+                    }
+                })
+                confirmDialog.show()
             } else {
-                // Permissions already granted, navigate to your desired fragment
-                navigateToChatFragment()
+                requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
             }
         } else {
-            // Permissions already granted for pre-M devices, navigate to your desired fragment
+            // Permissions already granted, navigate to your desired fragment
             navigateToChatFragment()
         }
     }
@@ -75,9 +72,7 @@ class HomeActivity : AppCompatActivity() {
 
     @SuppressLint("MissingSuperCall")
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         when (requestCode) {
             PERMISSIONS_REQUEST_CODE -> {
@@ -85,7 +80,6 @@ class HomeActivity : AppCompatActivity() {
                     // Permissions granted, navigate to your desired fragment
                     navigateToChatFragment()
                 } else {
-                    Log.v("rising", "hello")
                     requestPermission()
                 }
                 return

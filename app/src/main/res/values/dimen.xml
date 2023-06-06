@@ -162,13 +162,14 @@
     <dimen name="view_help_prompt_key_edittext_margin_bottom">5dp</dimen>
 
     <!-- search contact widget -->
-    <dimen name="view_search_contact_padding_top">15dp</dimen>
+    <dimen name="view_search_contact_padding_top">5dp</dimen>
     <dimen name="view_search_contact_padding_bottom">10dp</dimen>
     <dimen name="view_search_contact_padding_horizontal">8dp</dimen>
     <dimen name="view_search_contact_corner_radius">10dp</dimen>
     <dimen name="view_search_contact_elevation">5dp</dimen>
     <dimen name="view_search_contact_info_avatar_width">100dp</dimen>
     <dimen name="view_search_contact_info_avatar_height">100dp</dimen>
+    <dimen name="view_search_contact_info_avatar_padding">10dp</dimen>
     <dimen name="view_search_contact_info_avatar_border_width">2dp</dimen>
     <dimen name="view_search_contact_info_avatar_radius">100dp</dimen>
     <dimen name="view_search_contact_info_text_font_size">@dimen/font_normal</dimen>

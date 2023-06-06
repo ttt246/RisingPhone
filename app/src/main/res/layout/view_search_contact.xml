@@ -31,6 +31,7 @@
                 android:layout_width="@dimen/view_search_contact_info_avatar_width"
                 android:layout_height="@dimen/view_search_contact_info_avatar_height"
                 android:src="@drawable/default_avatar"
+                android:padding="@dimen/view_search_contact_info_avatar_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

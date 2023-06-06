@@ -7,7 +7,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class RequestTrainContactModel {
+class RequestTrainContactModel(builder: Builder) {
 
     /** this identify request type
      * example: it will be  'message' when users send message, 'image' when users upload image
@@ -17,11 +17,10 @@ class RequestTrainContactModel {
     var contacts = JSONArray()
     var uuid: String = ""
 
-    constructor(builder: Builder) {
+    init {
         this.token = MyApplication.appContext.getFCMToken()
         this.uuid = MyApplication.appContext.getUUID()
         this.contacts = builder.contacts
-        this.uuid = builder.uuid
     }
 
     @Throws(JSONException::class)

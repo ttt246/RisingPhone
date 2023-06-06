@@ -4,7 +4,7 @@ import com.matthaigh27.chatgptwrapper.MyApplication
 import org.json.JSONException
 import org.json.JSONObject
 
-class RequestBodyModel {
+class RequestBodyModel(builder: Builder) {
 
     /** this identify request type
      * example: it will be  'message' when users send message, 'image' when users upload image
@@ -15,12 +15,11 @@ class RequestBodyModel {
     var imageName: String = ""
     var uuid: String = ""
 
-    constructor(builder: Builder) {
+    init {
         this.token = MyApplication.appContext.getFCMToken()
         this.uuid = MyApplication.appContext.getUUID()
         this.message = builder.message
         this.imageName = builder.imageName
-        this.uuid = builder.uuid
     }
 
     @Throws(JSONException::class)
