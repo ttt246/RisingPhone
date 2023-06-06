@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.widget.ImageView
 import androidx.room.RoomDatabase
 import com.bumptech.glide.Glide
@@ -84,16 +86,18 @@ class Utils {
      * @param path local path for converting to ByteArray
      * @return ByteArray data converted from image local path
      */
-    fun getBytesFromPath(path: String?): ByteArray? {
+    @Suppress("UNREACHABLE_CODE")
+    fun getBytesFromPath(path: String?): ByteArray {
+        var byteArray: ByteArray? = null
         try {
             val stream = FileInputStream(path)
-            val byteArray = stream.readBytes()
+            byteArray = stream.readBytes()
             stream.close()
             return byteArray
         } catch (e: IOException) {
-            e.printStackTrace()
+            throw Exception(e)
         }
-        return null
+        return byteArray
     }
 
     /**
@@ -220,7 +224,10 @@ class Utils {
         return contacts
     }
 
-    suspend fun getChangedContacts(contacts: ArrayList<ContactModel>, roomDatabaseHandler: MyDatabase): ArrayList<ContactModel> {
+    suspend fun getChangedContacts(
+        contacts: ArrayList<ContactModel>,
+        roomDatabaseHandler: MyDatabase
+    ): ArrayList<ContactModel> {
         return CoroutineScope(Dispatchers.IO).async {
             val originalContacts = roomDatabaseHandler.contactDao().getAllContacts()
             val changedContactList = ArrayList<ContactModel>()
@@ -234,13 +241,17 @@ class Utils {
                             contact.status = "updated"
                             changedContactList.add(contact)
 
-                            roomDatabaseHandler.contactDao().updateContact(
-                                ContactEntity(
-                                    contact.id,
-                                    contact.name,
-                                    contact.phoneList.toString()
+                            try {
+                                roomDatabaseHandler.contactDao().updateContact(
+                                    ContactEntity(
+                                        contact.id,
+                                        contact.name,
+                                        contact.phoneList.toString()
+                                    )
                                 )
-                            )
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         } else {
                             contact.status = "nothing"
                         }
@@ -254,27 +265,34 @@ class Utils {
                     deletedContacts.status = "deleted"
                     changedContactList.add(deletedContacts)
 
-                    roomDatabaseHandler.contactDao().deleteContact(
-                        ContactEntity(
-                            deletedContacts.id,
-                            deletedContacts.name,
-                            deletedContacts.phoneList.toString()
+                    try {
+                        roomDatabaseHandler.contactDao().deleteContact(
+                            ContactEntity(
+                                deletedContacts.id,
+                                deletedContacts.name,
+                                deletedContacts.phoneList.toString()
+                            )
                         )
-                    )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
             contacts.forEach { contact ->
                 if (contact.status.isEmpty()) {
                     contact.status = "created"
                     changedContactList.add(contact)
-
-                    roomDatabaseHandler.contactDao().insertContact(
-                        ContactEntity(
-                            contact.id,
-                            contact.name,
-                            contact.phoneList.toString()
+                    try {
+                        roomDatabaseHandler.contactDao().insertContact(
+                            ContactEntity(
+                                contact.id,
+                                contact.name,
+                                contact.phoneList.toString()
+                            )
                         )
-                    )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             }
             changedContactList
@@ -317,6 +335,20 @@ class Utils {
         }
         return jsonContacts
     }
+
+    fun getRealPathFromUri(context: Context, contentUri: Uri?): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } finally {
+            cursor?.close()
+        }
+    }
+
 
     companion object {
         var instance: Utils = Utils()

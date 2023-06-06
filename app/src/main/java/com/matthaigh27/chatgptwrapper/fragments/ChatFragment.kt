@@ -8,15 +8,12 @@ import android.view.ViewGroup
 import android.annotation.SuppressLint
 import android.app.ActionBar.LayoutParams
 import android.content.*
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import android.provider.ContactsContract
-import android.provider.ContactsContract.Contacts
 import android.provider.MediaStore
 import android.telephony.SmsManager
 import android.util.Log
@@ -34,12 +31,10 @@ import com.matthaigh27.chatgptwrapper.MyApplication
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.adapters.ChatAdapter
 import com.matthaigh27.chatgptwrapper.database.MyDatabase
-import com.matthaigh27.chatgptwrapper.database.entity.ContactEntity
 import com.matthaigh27.chatgptwrapper.database.entity.ImageEntity
 import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog
 import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog.OnPositiveButtonClickListener
 import com.matthaigh27.chatgptwrapper.models.*
-import com.matthaigh27.chatgptwrapper.models.common.ContactModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.models.viewmodels.ChatMessageModel
@@ -58,7 +53,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
@@ -67,6 +61,7 @@ import kotlin.collections.ArrayList
 
 class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     private lateinit var rootView: View
+    private var mContext: Context? = null
 
     /** ui components for chatlist recyclerview */
     private lateinit var mRvChatList: RecyclerView
@@ -86,6 +81,8 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     private var mMessageList: ArrayList<ChatMessageModel> = ArrayList()
     private lateinit var mAdapter: ChatAdapter
 
+    /** when a user selects image by camera or gallery,
+     * these two variables are used to save image source and name */
     private var mSelectedImage: ByteArray? = null
     private var mSelectedImageName: String = ""
 
@@ -103,22 +100,26 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     /** list of help prompt commands */
     private var mHelpPromptList: ArrayList<HelpPromptModel>? = null
 
+    /** animation variable for loading spinner */
     private val rotate = RotateAnimation(
         0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
     )
 
-    var mRoomDataHandler: MyDatabase? = null
+    /** room database handler for local database */
+    private lateinit var mRoomDataHandler: MyDatabase
 
-    private var mContext: Context? = null
-
+    /** status variable that checks if widget in chatting interface does exist */
     private var mIsExistWidget: Boolean = false
 
+    /**
+     * this is invoked when users click the message icon to send sms on contact detail dialog
+     * that is shown when a user search contacts
+     */
     private var mSMSOnClickListener: ContactDetailItem.OnSMSClickListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
         rootView = inflater.inflate(R.layout.fragment_chat, container, false)
         init()
         return rootView
@@ -130,26 +131,16 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         initView()
         initDatabase()
 
-        fetchImages()
-
+        trainImages()
         getAllPromptCommands()
-        trainContacts()
     }
 
-    private fun trainContacts() {
-        showLoading(true, "Train Contacts")
-        val contacts = Utils.instance.getContacts(mContext!!)
-        CoroutineScope(Dispatchers.Main).launch {
-            val changedContacts = Utils.instance.getChangedContacts(contacts, mRoomDataHandler!!)
-            httpClient.trainContacts(changedContacts)
-        }
-
-    }
 
     private fun getAllPromptCommands() {
         showLoading(true, "Loading Help Prompt Data")
         httpClient.getALlHelpPromptCommands()
     }
+
 
     private fun initEnvironment() {
         val policy = ThreadPolicy.Builder().permitAll().build()
@@ -157,26 +148,15 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     }
 
     private fun initValues() {
+        mContext = context
+
         httpClient = HttpClient(this)
 
         rotate.duration = 3000
         rotate.repeatCount = Animation.INFINITE
         rotate.interpolator = LinearInterpolator()
 
-        mContext = context
-        mSMSOnClickListener = object: ContactDetailItem.OnSMSClickListener {
-            override fun onSMSClickListener(phoneNumber: String) {
-                addMessage(
-                    "SMS", false, false, true, MSG_WIDGET_TYPE_SMS, phoneNumber
-                )
-            }
-
-            override fun onVoiceCallListener(phoneNumber: String, toName: String) {
-                addMessage(
-                    "You made a voice call to $toName($phoneNumber)", false, false
-                )
-            }
-        }
+        initSMSOnClickListener()
     }
 
     private fun initView() {
@@ -244,6 +224,29 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         mRoomDataHandler = MyDatabase.getDatabase(mContext!!)
     }
 
+    private fun initSMSOnClickListener() {
+        mSMSOnClickListener = object : ContactDetailItem.OnSMSClickListener {
+            override fun onSMSClickListener(phoneNumber: String) {
+                addMessage(
+                    "SMS",
+                    isMe = false,
+                    isSend = false,
+                    isWidget = true,
+                    widgetType = MSG_WIDGET_TYPE_SMS,
+                    widgetDescription = phoneNumber
+                )
+            }
+
+            override fun onVoiceCallListener(phoneNumber: String, toName: String) {
+                addMessage(
+                    message = "You made a voice call to $toName($phoneNumber)",
+                    isMe = false,
+                    isSend = false
+                )
+            }
+        }
+    }
+
     /**
      * set loading spinner visible
      */
@@ -266,9 +269,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             if (visible) {
                 mSpLoading.startAnimation(rotate)
                 mLlLoading.visibility = View.VISIBLE
-                mTvLoading.text = text.ifEmpty {
-                    ""
-                }
+                mTvLoading.text = text
             } else {
                 mSpLoading.clearAnimation()
                 mLlLoading.visibility = View.GONE
@@ -284,7 +285,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
 
         mIvLoadedPhoto.setImageBitmap(
             BitmapFactory.decodeByteArray(
-                imageByteArray, 0, imageByteArray.size
+                /* data = */ imageByteArray, /* offset = */ 0, /* length = */ imageByteArray.size
             )
         )
     }
@@ -309,11 +310,11 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
      */
     private fun getImageResponse(imageName: String, imageDesc: String) {
         if (imageName.isEmpty() && imageDesc.isNotEmpty()) {
-            addMessage(imageDesc, false)
+            addMessage(message = imageDesc, isMe = false)
             return
         }
 
-        showLoading(true, LOADING_DOWNLOADING_IMAGE)
+        showLoading(visible = true, text = LOADING_DOWNLOADING_IMAGE)
 
         val imageNameToUpload = "images/$imageName"
 
@@ -322,18 +323,32 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             try {
                 val image = Utils.instance.getBitmapFromURL(uri.toString())
                 if (image == null) showToast("can not get bitmap from url")
-                val baos = ByteArrayOutputStream()
-                image!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                mSelectedImage = baos.toByteArray()
+                val byteArrayOutputStream = ByteArrayOutputStream()
+
+                val isSuccess =
+                    image!!.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+                if (!isSuccess) {
+                    showToast("Fail to compress image")
+                }
+                mSelectedImage = byteArrayOutputStream.toByteArray()
             } catch (e: Exception) {
-                showToast("cannnot get downloadurl from firebase store")
+                showToast("cannot get download url from firebase store")
                 e.printStackTrace()
             }
 
-            addMessage(imageDesc, false)
-            showLoading(false)
+            addMessage(message = imageDesc, isMe = false)
+            showLoading(visible = false)
         }
         return
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateChangedUserData()
+    }
+
+    private fun updateChangedUserData() {
+        trainContacts()
     }
 
     /**
@@ -346,7 +361,11 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                 when (command.mainCommandName) {
                     "sms" -> {
                         addMessage(
-                            "SMS", false, false, true, MSG_WIDGET_TYPE_SMS
+                            message = "SMS",
+                            isMe = false,
+                            isSend = false,
+                            isWidget = true,
+                            widgetType = MSG_WIDGET_TYPE_SMS
                         )
                     }
 
@@ -355,17 +374,17 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                             if (model.name == command.mainCommandName) {
                                 addMessage(
                                     "Help Prompt Command",
-                                    true,
-                                    false,
-                                    true,
-                                    MSG_WIDGET_TYPE_HELP_PRMOPT,
-                                    model.toString()
+                                    isMe = true,
+                                    isSend = false,
+                                    isWidget = true,
+                                    widgetType = MSG_WIDGET_TYPE_HELP_PRMOPT,
+                                    widgetDescription = model.toString()
                                 )
                                 return
                             }
                         }
                         addMessage(
-                            "No such command name exists.", false, false
+                            message = "No such command name exists.", isMe = false, isSend = false
                         )
                     }
                 }
@@ -377,7 +396,8 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                     mHelpPromptList!!.forEach { model ->
                         strHelpList += "\n- " + model.name
                     }
-                    addMessage(usage + strHelpList, false, false)
+
+                    addMessage(message = usage + strHelpList, isMe = false, isSend = false)
                 } else {
                     var strHelpDesc = ""
                     mHelpPromptList!!.forEach { model ->
@@ -389,10 +409,10 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                             strHelpDesc = "description: " + model.description + "\ntags:" + strTags
                         }
                     }
-                    if (strHelpDesc == "") addMessage(
-                        "No such command name exists.", false, false
+                    if (strHelpDesc.isEmpty()) addMessage(
+                        message = "No such command name exists.", isMe = false, isSend = false
                     )
-                    else addMessage(strHelpDesc, false, false)
+                    else addMessage(message = strHelpDesc, isMe = false, isSend = false)
                 }
             }
         } catch (e: Exception) {
@@ -411,6 +431,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
      * @param isSend is boolean that checks if you send request to server
      * @param isWidget is boolean that checks if message item has widget
      * @param widgetType is type of Widget ex: SMS, HELP_COMMAND, etc
+     * @param widgetDescription is string that saves information for widget
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun addMessage(
@@ -421,9 +442,9 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         widgetType: String = "",
         widgetDescription: String = ""
     ) {
-        if ((message == "" && mSelectedImage == null) || mIsExistWidget) return
-        if (isWidget == true) {
-            if(widgetType != MSG_WIDGET_TYPE_SEARCH_CONTACT) {
+        if ((message.isEmpty() && mSelectedImage == null) || mIsExistWidget) return
+        if (isWidget) {
+            if (widgetType != MSG_WIDGET_TYPE_SEARCH_CONTACT) {
                 mIsExistWidget = true
             }
         }
@@ -447,7 +468,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
          * if users picked some image from camera or gallery, the image upload to firebase store
          * mSelectedImageName is uuid created uploading to firebase store
          */
-        if (mSelectedImageName != "") {
+        if (mSelectedImageName.isNotEmpty()) {
             msg.imageName = mSelectedImageName
             mSelectedImageName = ""
         }
@@ -458,7 +479,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             mMessageList.add(msg)
             mAdapter.notifyDataSetChanged()
             mEtMessage.setText("")
-            mRvChatList.scrollTo(1000, -1000)
+            mRvChatList.scrollTo(/* x = */ 1000, /* y = */ -1000)
             mRvChatList.scrollToPosition(mMessageList.size - 1)
         }
 
@@ -472,7 +493,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                 return
             }
 
-            showLoading(true, LOADING_ASKING_TO_GPT)
+            showLoading(visible = true, text = LOADING_ASKING_TO_GPT)
             if (msg.image != null) {
                 httpClient.callImageRelatedness(msg.imageName)
             } else {
@@ -518,7 +539,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
      * calls when finish picking image
      *
      * @param imageByteData is bytearray of picked image
-     * @param type if users are goingto upload image or pick image for query
+     * @param type if users are going to upload image or pick image for query
      */
     private fun pickedImage(imageByteData: ByteArray, type: String) {
         if (type == "image_upload") {
@@ -555,11 +576,10 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                     CoCo.with(activity!!).take(Utils.instance.createSDCardFile())
                         .start(object : CoCoAdapter<TakeResult>() {
                             override fun onSuccess(data: TakeResult) {
-                                val byteArray: ByteArray? =
+                                val byteArray: ByteArray =
                                     Utils.instance.getBytesFromPath(data.savedFile!!.absolutePath)
-                                if (byteArray == null) showToast("cannot get bytes from path")
                                 pickedImage(
-                                    byteArray!!, mImagePickerType
+                                    byteArray, mImagePickerType
                                 )
                             }
 
@@ -753,59 +773,38 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         return listOfImageUris
     }
 
-    /**
-     * @param path local path for converting to ByteArray
-     * @return ByteArray data converted from image local path
-     */
-    private fun getBytesFromPath(path: String?): ByteArray? {
-        try {
-            val stream = FileInputStream(path)
-            val byteArray = stream.readBytes()
-            stream.close()
-            return byteArray
-        } catch (e: IOException) {
-            showToast("cannot get bytes from path")
-            e.printStackTrace()
-        }
-        return null
-    }
-
-    private fun fetchImages() {
+    private fun trainImages() {
         CoroutineScope(Dispatchers.IO).launch {
-            val images = queryImagesFromExternalStorage(mContext!!.contentResolver)
-            val originalImages = mRoomDataHandler!!.imageDao().getAllImages()
+            val images = queryImagesFromExternalStorage(requireContext().contentResolver)
+            val originalImages = mRoomDataHandler.imageDao().getAllImages()
 
             images.forEach { uri ->
-                var existFlag = false
-                val path = getRealPathFromUri(mContext!!, uri)
+                var isExist = false
+                val path = Utils.instance.getRealPathFromUri(requireContext(), uri)
                 for (i in originalImages.indices) {
                     val entity: ImageEntity = originalImages[i]
                     if (entity.path == path) {
-                        existFlag = true
+                        isExist = true
                         break
                     }
                 }
-                if (!existFlag) {
-                    val byteArray = getBytesFromPath(path)
-                    val uuid = uploadImageToFirebaseStorage(byteArray!!)
+                if (!isExist) {
+                    val byteArray = Utils.instance.getBytesFromPath(path)
+                    val uuid = uploadImageToFirebaseStorage(byteArray)
 
-                    Log.d(TAG, uuid.toString())
-                    mRoomDataHandler!!.imageDao().insertImage(ImageEntity(0, path!!, "${uuid}"))
+                    if (path != null)
+                        mRoomDataHandler.imageDao().insertImage(ImageEntity(0, path, "$uuid"))
                 }
             }
         }
     }
 
-    fun getRealPathFromUri(context: Context, contentUri: Uri?): String? {
-        var cursor: Cursor? = null
-        return try {
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
-            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
-            cursor.getString(column_index)
-        } finally {
-            cursor?.close()
+    private fun trainContacts() {
+        showLoading(true, "Train Contacts")
+        val contacts = Utils.instance.getContacts(mContext!!)
+        CoroutineScope(Dispatchers.Main).launch {
+            val changedContacts = Utils.instance.getChangedContacts(contacts, mRoomDataHandler)
+            httpClient.trainContacts(changedContacts)
         }
     }
 
@@ -814,7 +813,6 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             val smsManager = SmsManager.getDefault()
             val parts = smsManager.divideMessage(message)
             smsManager.sendMultipartTextMessage(phoneNumber, null, parts, null, null)
-            showToast("Sent SMS")
         } catch (e: SecurityException) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -824,7 +822,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
 
     @SuppressLint("UseRequireInsteadOfGet")
     fun runOnUIThread(action: () -> Unit) {
-        activity!!.runOnUiThread {
+        requireActivity().runOnUiThread {
             action()
         }
     }

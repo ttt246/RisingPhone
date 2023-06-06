@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- common -->
-    <dimen name="common_button_horizontal_space_size">4dp</dimen>
-    <dimen name="common_button_fontsize">13dp</dimen>
-    <dimen name="common_button_height">30dp</dimen>
-    <dimen name="common_divider_width">1dp</dimen>
-
     <!-- font sizes -->
-    <dimen name="font_larger">22sp</dimen>
-    <dimen name="font_large">18sp</dimen>
-    <dimen name="font_normal">15sp</dimen>
-    <dimen name="font_small">12sp</dimen>
+    <dimen name="font_larger">20sp</dimen>
+    <dimen name="font_large">16sp</dimen>
+    <dimen name="font_normal">13sp</dimen>
+    <dimen name="font_small">10sp</dimen>
+
+    <!-- radius size -->
+    <dimen name="radius_larger">25dp</dimen>
+    <dimen name="radius_large">20dp</dimen>
+    <dimen name="radius_normal">10dp</dimen>
+    <dimen name="radius_small">5dp</dimen>
+
+    <!-- text line spacing size -->
+    <dimen name="line_spacing_larger">7dp</dimen>
+    <dimen name="line_spacing_large">5dp</dimen>
+    <dimen name="line_spacing_normal">3dp</dimen>
+    <dimen name="line_spacing_small">1dp</dimen>
 
     <!-- typical spacing between two views -->
     <dimen name="spacing_huge">40dp</dimen>
@@ -23,6 +29,12 @@
     <dimen name="button_height_tall">60dp</dimen>
     <dimen name="button_height_normal">40dp</dimen>
     <dimen name="button_height_short">32dp</dimen>
+
+    <!-- common -->
+    <dimen name="common_button_horizontal_space_size">4dp</dimen>
+    <dimen name="common_button_fontsize">13dp</dimen>
+    <dimen name="common_button_height">30dp</dimen>
+    <dimen name="common_divider_width">1dp</dimen>
 
     <!-- chat main interface -->
     <dimen name="chat_content_top_radius">10dp</dimen>
@@ -47,7 +59,7 @@
     <dimen name="sms_widget_evaluate_max">20dp</dimen>
 
     <dimen name="sms_edittext_margin_bottom">16dp</dimen>
-    <dimen name="sms_edittext_font_size">13sp</dimen>
+    <dimen name="sms_edittext_font_size">@dimen/font_normal</dimen>
     <dimen name="sms_edittext_height">30dp</dimen>
     <dimen name="sms_edittext_bg_left">-2dp</dimen>
     <dimen name="sms_edittext_bg_right">-2dp</dimen>
@@ -58,7 +70,7 @@
     <dimen name="sms_button_radius">20dp</dimen>
     <dimen name="sms_button_stroke_width">1dp</dimen>
     <dimen name="sms_button_height">30dp</dimen>
-    <dimen name="sms_button_fontsize">13sp</dimen>
+    <dimen name="sms_button_fontsize">@dimen/font_normal</dimen>
     <dimen name="sms_button_margin_horizontal">4dp</dimen>
 
     <!-- Loading -->
@@ -111,7 +123,7 @@
     <dimen name="chat_message_item_layout_padding">4dp</dimen>
     <dimen name="chat_message_item_radius">20dp</dimen>
     <dimen name="chat_message_item_padding">8dp</dimen>
-    <dimen name="chat_message_item_fontsize">13sp</dimen>
+    <dimen name="chat_message_item_fontsize">@dimen/font_normal</dimen>
     <dimen name="chat_message_item_imageview_width">70dp</dimen>
     <dimen name="chat_message_item_imageview_height">70dp</dimen>
     <dimen name="chat_message_sent_item_margin_end">15dp</dimen>
@@ -136,7 +148,7 @@
     <dimen name="view_help_prompt_title_fontsize">15sp</dimen>
     <dimen name="view_help_prompt_title_margin_bottom">4dp</dimen>
     <dimen name="view_help_prompt_title_padding">7dp</dimen>
-    <dimen name="view_help_prompt_command_fontsize">13sp</dimen>
+    <dimen name="view_help_prompt_command_fontsize">@dimen/font_normal</dimen>
     <dimen name="view_help_prompt_command_list_margin_bottom">8dp</dimen>
     <dimen name="view_help_prompt_command_list_height">30dp</dimen>
     <dimen name="view_help_prompt_command_listitem_textsize">12sp</dimen>
@@ -145,21 +157,22 @@
     <dimen name="view_help_prompt_edittext_round_size">5dp</dimen>
     <dimen name="view_help_prompt_edittext_stroke_width">1dp</dimen>
     <dimen name="view_help_prompt_edittext_padding_start">10dp</dimen>
-    <dimen name="view_help_prompt_edittext_fontsize">13sp</dimen>
+    <dimen name="view_help_prompt_edittext_fontsize">@dimen/font_normal</dimen>
     <dimen name="view_help_prompt_key_edittext_minheight">30dp</dimen>
     <dimen name="view_help_prompt_key_edittext_margin_bottom">5dp</dimen>
 
     <!-- search contact widget -->
-    <dimen name="view_search_contact_padding_top">15dp</dimen>
+    <dimen name="view_search_contact_padding_top">5dp</dimen>
     <dimen name="view_search_contact_padding_bottom">10dp</dimen>
     <dimen name="view_search_contact_padding_horizontal">8dp</dimen>
     <dimen name="view_search_contact_corner_radius">10dp</dimen>
     <dimen name="view_search_contact_elevation">5dp</dimen>
     <dimen name="view_search_contact_info_avatar_width">100dp</dimen>
     <dimen name="view_search_contact_info_avatar_height">100dp</dimen>
+    <dimen name="view_search_contact_info_avatar_padding">10dp</dimen>
     <dimen name="view_search_contact_info_avatar_border_width">2dp</dimen>
     <dimen name="view_search_contact_info_avatar_radius">100dp</dimen>
-    <dimen name="view_search_contact_info_text_font_size">13sp</dimen>
+    <dimen name="view_search_contact_info_text_font_size">@dimen/font_normal</dimen>
     <dimen name="view_search_contact_info_avatar_text_space_size">5dp</dimen>
     <dimen name="view_search_contact_info_text_button_space_size">7dp</dimen>
     <dimen name="view_search_contact_control_button_width">30dp</dimen>
@@ -190,5 +203,15 @@
     <dimen name="view_contact_detail_name_text_size">28sp</dimen>
     <dimen name="view_contact_detail_phones_cardview_margin">12dp</dimen>
     <dimen name="view_contact_detail_phones_cardview_elevation">5dp</dimen>
+
+    <!-- common confirm dialog -->
+    <dimen name="dialog_common_confirm_margin">20dp</dimen>
+    <dimen name="dialog_common_confirm_padding">15dp</dimen>
+    <dimen name="dialog_common_confirm_radius">20dp</dimen>
+    <dimen name="dialog_common_confirm_message_text_size">@dimen/font_normal</dimen>
+    <dimen name="dialog_common_confirm_message_text_line_spacing">@dimen/line_spacing_normal</dimen>
+    <dimen name="dialog_common_confirm_message_space_message_button">20dp</dimen>
+    <dimen name="dialog_common_confirm_message_button_text_size">@dimen/font_normal</dimen>
+
 
 </resources>

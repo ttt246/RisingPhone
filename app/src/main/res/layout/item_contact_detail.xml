@@ -29,7 +29,7 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginHorizontal="@dimen/item_contact_detail_phone_info_margin_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/btn_send_message"

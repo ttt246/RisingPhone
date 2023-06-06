@@ -23,4 +23,8 @@
     <string name="help_prompt_command_ok">Ok</string>
     <string name="help_prompt_command_cancel">Cancel</string>
 
+    <!-- dialog common confirm -->
+    <string name="dialog_common_confirm_ok">OK</string>
+    <string name="dialog_common_confirm_cancel">Cancel</string>
+
 </resources>
