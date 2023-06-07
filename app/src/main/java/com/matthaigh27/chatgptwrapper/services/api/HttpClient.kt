@@ -1,6 +1,7 @@
 package com.matthaigh27.chatgptwrapper.services.api
 
 import android.util.Log
+import com.matthaigh27.chatgptwrapper.BuildConfig
 import com.matthaigh27.chatgptwrapper.models.common.ContactModel
 import com.matthaigh27.chatgptwrapper.models.requestmodels.RequestBodyModel
 import com.matthaigh27.chatgptwrapper.models.requestmodels.RequestTrainContactModel
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit
 
 class HttpClient {
     /* Server URL and Api Endpoints */
-    val SERVER_URL = "https://smartphone.herokuapp.com/"
+    val SERVER_URL = BuildConfig.BASE_URL
     val SEND_NOTIFICATION_URL = SERVER_URL + "sendNotification"
     val IMAGE_RELATEDNESS = SERVER_URL + "image_relatedness"
     val UPLOAD_IMAGE = SERVER_URL + "uploadImage"
