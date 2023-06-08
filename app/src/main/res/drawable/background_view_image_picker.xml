@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/dialog_image_picker_bgcolor" />
+    <solid android:color="@color/view_image_picker_bgcolor" />
     <corners android:radius="@dimen/control_button_common_radius" />
 </shape>

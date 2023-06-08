@@ -19,9 +19,12 @@ import android.telephony.SmsManager
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View.OnClickListener
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
+import android.view.animation.TranslateAnimation
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,8 +35,8 @@ import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.adapters.ChatAdapter
 import com.matthaigh27.chatgptwrapper.database.MyDatabase
 import com.matthaigh27.chatgptwrapper.database.entity.ImageEntity
-import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog
-import com.matthaigh27.chatgptwrapper.dialogs.ImagePickerDialog.OnPositiveButtonClickListener
+import com.matthaigh27.chatgptwrapper.widgets.ImagePickerWidget
+import com.matthaigh27.chatgptwrapper.widgets.ImagePickerWidget.OnPositiveButtonClickListener
 import com.matthaigh27.chatgptwrapper.models.*
 import com.matthaigh27.chatgptwrapper.models.common.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpPromptModel
@@ -91,7 +94,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
      * 'image_uplaod' when user is going to upload image
      * 'image_picker' when user is going to pick image for prompting
      */
-    private lateinit var mImagePickerDlg: ImagePickerDialog
+    private lateinit var mImagePickerWidget: ImagePickerWidget
     private var mImagePickerType: String = ""
 
     /** HttpClient for restful apis */
@@ -217,7 +220,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         mBtnCancelLoadPhoto = rootView.findViewById(R.id.btn_cancel_load_photo)
         mBtnCancelLoadPhoto.setOnClickListener(this)
 
-        initImagePickerDialog()
+        initImagePickerWidget()
     }
 
     private fun initDatabase() {
@@ -510,12 +513,18 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
 
             R.id.btn_image_upload -> {
                 mImagePickerType = PICKERTYPE_IMAGE_UPLOAD
-                mImagePickerDlg.show()
+                if(rootView.findViewById<View>(R.id.ll_toolbar).visibility == View.VISIBLE)
+                    hideSlidingWidget()
+                else
+                    showSlidingWidget()
             }
 
             R.id.btn_image_picker -> {
                 mImagePickerType = PICKERTYPE_IMAGE_PICK
-                mImagePickerDlg.show()
+                if(rootView.findViewById<View>(R.id.ll_toolbar).visibility == View.VISIBLE)
+                    hideSlidingWidget()
+                else
+                    showSlidingWidget()
             }
 
             R.id.btn_cancel_load_photo -> {
@@ -567,8 +576,8 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
      * when you click gallery icon, users can select image in your storage.
      * A picked image converts into bytearray data and upload to firebase storage.
      */
-    private fun initImagePickerDialog() {
-        mImagePickerDlg = ImagePickerDialog(mContext!!)
+    private fun initImagePickerWidget() {
+        mImagePickerWidget = ImagePickerWidget(mContext!!)
 
         val myImplementation = object : OnPositiveButtonClickListener {
             override fun onPositiveBtnClick(isCamera: Boolean?) {
@@ -607,8 +616,10 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             }
         }
 
-        mImagePickerDlg.setOnClickListener(myImplementation)
-        mImagePickerDlg.window!!.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        mImagePickerWidget.setOnClickListener(myImplementation)
+
+        val slidingWidget = rootView.findViewById<LinearLayout>(R.id.ll_toolbar)
+        slidingWidget.addView(mImagePickerWidget)
     }
 
     private fun uploadSearchImage(imageByteArray: ByteArray) {
@@ -706,9 +717,9 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                         addMessage(
                             json.getString(RESPONSE_TYPE_CONTENT),
                             false,
-                            false,
-                            true,
-                            MSG_WIDGET_TYPE_SMS
+                            isSend = false,
+                            isWidget = true,
+                            widgetType = MSG_WIDGET_TYPE_SMS
                         )
                     }
 
@@ -726,12 +737,12 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
                     RESPONSE_TYPE_CONTACT -> {
                         try {
                             addMessage(
-                                "Contacts that you are looking for.",
-                                false,
-                                false,
-                                true,
-                                MSG_WIDGET_TYPE_SEARCH_CONTACT,
-                                json.getString(RESPONSE_TYPE_CONTENT)
+                                message = "Contacts that you are looking for.",
+                                isMe = false,
+                                isSend = false,
+                                isWidget = true,
+                                widgetType = MSG_WIDGET_TYPE_SEARCH_CONTACT,
+                                widgetDescription = json.getString(RESPONSE_TYPE_CONTENT)
                             )
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -812,7 +823,11 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         try {
             val smsManager = SmsManager.getDefault()
             val parts = smsManager.divideMessage(message)
-            smsManager.sendMultipartTextMessage(phoneNumber, null, parts, null, null)
+            smsManager.sendMultipartTextMessage(/* destinationAddress = */ phoneNumber, /* scAddress = */
+                null, /* parts = */
+                parts, /* sentIntents = */
+                null, /* deliveryIntents = */
+                null)
         } catch (e: SecurityException) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -825,6 +840,49 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
         requireActivity().runOnUiThread {
             action()
         }
+    }
+
+    private fun showSlidingWidget() {
+        val slidingWidget = rootView.findViewById<View>(R.id.ll_toolbar)
+
+        val dy = slidingWidget.measuredHeight.toFloat()
+        slidingWidget.visibility = View.VISIBLE
+
+        val anim = TranslateAnimation(0f, 0f, dy, 0f).apply {
+            duration = 150 // Set the animation duration, e.g., 300ms
+            interpolator = AccelerateDecelerateInterpolator()
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {
+                    slidingWidget.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {}
+
+                override fun onAnimationRepeat(animation: Animation?) {}
+            })
+        }
+
+        slidingWidget.startAnimation(anim)
+    }
+
+    private fun hideSlidingWidget() {
+        val slidingWidget = rootView.findViewById<View>(R.id.ll_toolbar)
+
+        val anim = AlphaAnimation(1f, 0f).apply {
+            duration = 100 // Set the animation duration, e.g., 300ms
+            interpolator = AccelerateDecelerateInterpolator()
+            setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {}
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    slidingWidget.visibility = View.GONE
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {}
+            })
+        }
+
+        slidingWidget.startAnimation(anim)
     }
 }
 

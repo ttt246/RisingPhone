@@ -73,10 +73,10 @@
     <color name="control_message_edittext_hint_color">@color/secondary_text</color>
     <color name="control_message_edittext_text_color">@color/white</color>
 
-    <!-- dialog image picker -->
-    <color name="dialog_image_picker_bgcolor">@color/primary_dark</color>
-    <color name="dialog_image_picker_icon_color">@color/white</color>
-    <color name="dialog_image_picker_text_color">@color/white</color>
+    <!-- image picker widget -->
+    <color name="view_image_picker_bgcolor">@color/transparent</color>
+    <color name="view_image_picker_icon_color">@color/primary_light</color>
+    <color name="view_image_picker_text_color">@color/primary_light</color>
 
     <!-- help promppt view -->
     <color name="view_help_prompt_bgcolor">@color/transparent</color>
