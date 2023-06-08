@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/primary"
+    android:background="@color/fragment_chat_bg_color"
     tools:context=".activites.HomeActivity">
 
     <!-- top header layout -->
@@ -20,6 +20,17 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <include layout="@layout/view_controls" />
+
+        <!-- New sliding widget -->
+        <LinearLayout
+            android:id="@+id/ll_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/grey_100"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent">
+        </LinearLayout>
     </LinearLayout>
 
     <!-- content view -->

@@ -1,6 +1,7 @@
 package com.matthaigh27.chatgptwrapper
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,6 +20,7 @@ class MyApplication : Application() {
 
     private var mFCMToken: String = String()
     private var mUUID: String = String()
+    @SuppressLint("HardwareIds")
     override fun onCreate() {
         super.onCreate()
 
@@ -26,6 +28,9 @@ class MyApplication : Application() {
         // on below line we are getting device id.
         mUUID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         appContext = applicationContext as MyApplication
+
+        Log.v("risingandroid mUUID: ", mUUID)
+        Log.v("risingandroid FCMToken: ", mFCMToken)
     }
 
     private fun initToken() {

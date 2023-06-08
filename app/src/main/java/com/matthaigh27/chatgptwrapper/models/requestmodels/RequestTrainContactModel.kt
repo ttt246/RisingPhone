@@ -1,25 +1,26 @@
 package com.matthaigh27.chatgptwrapper.models.requestmodels
 
 import com.matthaigh27.chatgptwrapper.MyApplication
+import com.matthaigh27.chatgptwrapper.models.common.ContactModel
+import com.matthaigh27.chatgptwrapper.utils.Utils
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class RequestBodyModel(builder: Builder) {
+class RequestTrainContactModel(builder: Builder) {
 
     /** this identify request type
      * example: it will be  'message' when users send message, 'image' when users upload image
      */
     var type: String = ""
     var token: String = ""
-    var message: String = ""
-    var imageName: String = ""
+    var contacts = JSONArray()
     var uuid: String = ""
 
     init {
         this.token = MyApplication.appContext.getFCMToken()
         this.uuid = MyApplication.appContext.getUUID()
-        this.message = builder.message
-        this.imageName = builder.imageName
+        this.contacts = builder.contacts
     }
 
     @Throws(JSONException::class)
@@ -28,8 +29,7 @@ class RequestBodyModel(builder: Builder) {
         val jsonObject = JSONObject()
         jsonObject.accumulate("type", type)
         jsonObject.accumulate("token", token)
-        jsonObject.accumulate("message", message)
-        jsonObject.accumulate("image_name", imageName)
+        jsonObject.accumulate("contacts", contacts)
         jsonObject.accumulate("uuid", uuid)
 
         return jsonObject
@@ -38,20 +38,18 @@ class RequestBodyModel(builder: Builder) {
     class Builder {
         var type: String = ""
         var token: String = ""
-        var message: String = ""
-        var imageName: String = ""
+        var contacts = JSONArray()
         var uuid: String = ""
 
         constructor() {
 
         }
 
-        constructor(request: RequestBodyModel) {
+        constructor(request: RequestTrainContactModel) {
             this.type = request.type
             this.token = request.token
-            this.message = request.message
-            this.imageName = request.imageName
             this.uuid = request.uuid
+            this.contacts = request.contacts
         }
 
         fun type(type: String): Builder {
@@ -64,13 +62,8 @@ class RequestBodyModel(builder: Builder) {
             return this
         }
 
-        fun message(message: String): Builder {
-            this.message = message
-            return this
-        }
-
-        fun imageName(imageName: String): Builder {
-            this.imageName = imageName
+        fun contacts(contacts: ArrayList<ContactModel>): Builder {
+            this.contacts = Utils.instance.convertContactModelToJsonArray(contacts)
             return this
         }
 
@@ -79,8 +72,8 @@ class RequestBodyModel(builder: Builder) {
             return this
         }
 
-        fun build(): RequestBodyModel {
-            return RequestBodyModel(this)
+        fun build(): RequestTrainContactModel {
+            return RequestTrainContactModel(this)
         }
     }
 }

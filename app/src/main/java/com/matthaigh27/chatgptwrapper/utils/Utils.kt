@@ -1,13 +1,32 @@
 package com.matthaigh27.chatgptwrapper.utils
 
+import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
+import android.provider.ContactsContract
+import android.provider.MediaStore
+import android.widget.ImageView
+import androidx.room.RoomDatabase
+import com.bumptech.glide.Glide
 import com.matthaigh27.chatgptwrapper.MyApplication
+import com.matthaigh27.chatgptwrapper.R
+import com.matthaigh27.chatgptwrapper.database.MyDatabase
+import com.matthaigh27.chatgptwrapper.database.entity.ContactEntity
+import com.matthaigh27.chatgptwrapper.models.common.ContactModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.services.api.HttpClient
 import com.matthaigh27.chatgptwrapper.utils.Constants.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -67,16 +86,18 @@ class Utils {
      * @param path local path for converting to ByteArray
      * @return ByteArray data converted from image local path
      */
-    fun getBytesFromPath(path: String?): ByteArray? {
+    @Suppress("UNREACHABLE_CODE")
+    fun getBytesFromPath(path: String?): ByteArray {
+        var byteArray: ByteArray? = null
         try {
             val stream = FileInputStream(path)
-            val byteArray = stream.readBytes()
+            byteArray = stream.readBytes()
             stream.close()
             return byteArray
         } catch (e: IOException) {
-            e.printStackTrace()
+            throw Exception(e)
         }
-        return null
+        return byteArray
     }
 
     /**
@@ -153,6 +174,181 @@ class Utils {
         }
         return commandlist
     }
+
+    @SuppressLint("Range")
+    fun getContacts(context: Context): ArrayList<ContactModel> {
+        val resolver: ContentResolver = context.contentResolver;
+        val cursor = resolver.query(
+            ContactsContract.Contacts.CONTENT_URI, null, null, null, null
+        )
+
+        val contacts = ArrayList<ContactModel>()
+        if (cursor!!.count > 0) {
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+
+                val name =
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                val phoneNumber = (cursor.getString(
+                    cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)
+                )).toInt()
+
+                val contact = ContactModel()
+                contact.id = id
+                contact.name = name
+
+                if (phoneNumber > 0) {
+                    val cursorPhone = context.contentResolver.query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?",
+                        arrayOf(id),
+                        null
+                    )
+
+                    if (cursorPhone!!.count > 0) {
+                        while (cursorPhone.moveToNext()) {
+                            val phoneNumValue = cursorPhone.getString(
+                                cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                            )
+                            contact.phoneList!!.add(phoneNumValue)
+                        }
+                    }
+                    cursorPhone.close()
+                }
+
+                contacts.add(contact)
+            }
+        }
+        cursor.close()
+        return contacts
+    }
+
+    suspend fun getChangedContacts(
+        contacts: ArrayList<ContactModel>,
+        roomDatabaseHandler: MyDatabase
+    ): ArrayList<ContactModel> {
+        return CoroutineScope(Dispatchers.IO).async {
+            val originalContacts = roomDatabaseHandler.contactDao().getAllContacts()
+            val changedContactList = ArrayList<ContactModel>()
+            for (i in originalContacts.indices) {
+                var isExist = false
+                contacts.forEach { contact ->
+                    if (originalContacts[i].id == contact.id) {
+                        if (originalContacts[i].name != contact.name ||
+                            originalContacts[i].phoneNumber != contact.phoneList.toString()
+                        ) {
+                            contact.status = "updated"
+                            changedContactList.add(contact)
+
+                            try {
+                                roomDatabaseHandler.contactDao().updateContact(
+                                    ContactEntity(
+                                        contact.id,
+                                        contact.name,
+                                        contact.phoneList.toString()
+                                    )
+                                )
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        } else {
+                            contact.status = "nothing"
+                        }
+                        isExist = true
+                        return@forEach
+                    }
+                }
+                if (!isExist) {
+                    val deletedContacts = ContactModel()
+                    deletedContacts.id = originalContacts[i].id
+                    deletedContacts.status = "deleted"
+                    changedContactList.add(deletedContacts)
+
+                    try {
+                        roomDatabaseHandler.contactDao().deleteContact(
+                            ContactEntity(
+                                deletedContacts.id,
+                                deletedContacts.name,
+                                deletedContacts.phoneList.toString()
+                            )
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            contacts.forEach { contact ->
+                if (contact.status.isEmpty()) {
+                    contact.status = "created"
+                    changedContactList.add(contact)
+                    try {
+                        roomDatabaseHandler.contactDao().insertContact(
+                            ContactEntity(
+                                contact.id,
+                                contact.name,
+                                contact.phoneList.toString()
+                            )
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            changedContactList
+        }.await()
+    }
+
+    fun getContactModelById(contactId: String, contacts: ArrayList<ContactModel>): ContactModel {
+        var contactModel = ContactModel()
+        contacts.forEach { contact ->
+            if (contactId == contact.id) {
+                return contact
+            }
+        }
+        return contactModel
+    }
+
+    fun setContactAvatar(contactId: Long, context: Context, imageView: ImageView) {
+        val uri = ContentUris.withAppendedId(
+            ContactsContract.Contacts.CONTENT_URI, contactId
+        )
+
+        Glide.with(context)
+            .load(uri)
+            .placeholder(R.drawable.default_avatar) // Set placeholder image
+            .error(R.drawable.default_avatar) // Set error image
+            .fallback(R.drawable.default_avatar) // Set fallback image
+            .into(imageView)
+    }
+
+    fun convertContactModelToJsonArray(contacts: ArrayList<ContactModel>): JSONArray {
+        var jsonContacts = JSONArray()
+        contacts.forEach { contact ->
+            val jsonObjectContact = JSONObject()
+            jsonObjectContact.put("contactId", contact.id)
+            jsonObjectContact.put("displayName", contact.name)
+            jsonObjectContact.put("phoneNumbers", contact.phoneList)
+            jsonObjectContact.put("status", contact.status)
+
+            jsonContacts.put(jsonObjectContact)
+        }
+        return jsonContacts
+    }
+
+    fun getRealPathFromUri(context: Context, contentUri: Uri?): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } finally {
+            cursor?.close()
+        }
+    }
+
 
     companion object {
         var instance: Utils = Utils()

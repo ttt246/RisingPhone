@@ -1,7 +1,10 @@
 package com.matthaigh27.chatgptwrapper.services.api
 
 import android.util.Log
+import com.matthaigh27.chatgptwrapper.BuildConfig
+import com.matthaigh27.chatgptwrapper.models.common.ContactModel
 import com.matthaigh27.chatgptwrapper.models.requestmodels.RequestBodyModel
+import com.matthaigh27.chatgptwrapper.models.requestmodels.RequestTrainContactModel
 import com.matthaigh27.chatgptwrapper.utils.Constants
 import com.matthaigh27.chatgptwrapper.utils.Constants.GET
 import com.matthaigh27.chatgptwrapper.utils.Constants.POST
@@ -19,11 +22,12 @@ import java.util.concurrent.TimeUnit
 
 class HttpClient {
     /* Server URL and Api Endpoints */
-    val SERVER_URL = "https://smartphone.herokuapp.com/"
+    val SERVER_URL = BuildConfig.BASE_URL
     val SEND_NOTIFICATION_URL = SERVER_URL + "sendNotification"
     val IMAGE_RELATEDNESS = SERVER_URL + "image_relatedness"
     val UPLOAD_IMAGE = SERVER_URL + "uploadImage"
     val GET_ALL_HELP_COMMANDS = SERVER_URL + "commands"
+    val TRAIN_CONTACTS = SERVER_URL + "train/contacts"
 
     var mCallback: HttpRisingInterface
 
@@ -57,7 +61,6 @@ class HttpClient {
             }
 
             override fun onResponse(call: Call, response: Response) {
-
                 val myResponse = response.body()!!.string()
                 Log.d(Constants.TAG, myResponse)
 
@@ -65,7 +68,7 @@ class HttpClient {
                     val json = JSONObject(myResponse)["result"].toString()
                     mCallback.onSuccessResult(json)
                 } catch (e: JSONException) {
-                    mCallback.onFailureResult("incorrect response format")
+                    mCallback.onFailureResult(myResponse)
                     e.printStackTrace()
                 }
             }
@@ -101,6 +104,14 @@ class HttpClient {
             RequestBodyModel.Builder().build().buildJsonObject().toString(),
             GET_ALL_HELP_COMMANDS,
             GET
+        )
+    }
+
+    fun trainContacts(contacts: ArrayList<ContactModel>) {
+        sendOkHttpRequest(
+            RequestTrainContactModel.Builder().contacts(contacts).build().buildJsonObject().toString(),
+            TRAIN_CONTACTS,
+            POST
         )
     }
 }
