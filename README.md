@@ -5,20 +5,15 @@
 The goal of this project is to develop a phone operating system that replaces the traditional UI of an Android-based smartphone with ChatGPT. The AI will manage control of all apps via plugins, which can be prompted by the user.
 
 
-## Demo
+### RisingPhone
 
 <p align='center'>
-  <img align='center' src='assets/img/output.gif' width='250px' height='500px'/>
+  <img align='center' src='assets/img/desc.png' width='100%' />
 </p>
 
-
-## Documentation
-
-### Architecture
-
-<p align='center'>
-  <img align='center' src='assets/img/arch.jpg'/>
-</p>
+- 📱 Support for mobile devices to manage all apps via plugin as its launcher.
+- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
+- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
 
 ### Features
 
@@ -29,17 +24,18 @@ The goal of this project is to develop a phone operating system that replaces th
 | Image Search System  | A user can search image on Android local storage |
 | Send SMS | If a user says that send SMS, mobile open SMS editor and a user can send SMS using the editor. |
 
+[[Rising Brain](https://github.com/ttt246/RisingBrain)]
 ### Run locally
 - Copy google-services.json into app folder of project
 
 ### CI/CD
 - set google-services.json to github secrets
 
-## Test
+### Test
 - Unit Test
 - Instrumented Test
 
-## Contributing
+### Contributing
 
 Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
 
