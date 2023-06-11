@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <stroke
+        android:width="@dimen/item_chat_tool_stroke_width"
+        android:color="@color/item_chat_tool_stroke_color" />
+    <corners android:radius="@dimen/item_chat_tool_radius" />
+</shape>

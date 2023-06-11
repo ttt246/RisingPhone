@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.annotation.SuppressLint
-import android.app.ActionBar.LayoutParams
 import android.content.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -24,7 +23,6 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
-import android.view.animation.TranslateAnimation
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,8 +33,8 @@ import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.adapters.ChatAdapter
 import com.matthaigh27.chatgptwrapper.database.MyDatabase
 import com.matthaigh27.chatgptwrapper.database.entity.ImageEntity
-import com.matthaigh27.chatgptwrapper.widgets.ImagePickerWidget
-import com.matthaigh27.chatgptwrapper.widgets.ImagePickerWidget.OnPositiveButtonClickListener
+import com.matthaigh27.chatgptwrapper.widgets.ChatToolsWidget
+import com.matthaigh27.chatgptwrapper.widgets.ChatToolsWidget.OnPositiveButtonClickListener
 import com.matthaigh27.chatgptwrapper.models.*
 import com.matthaigh27.chatgptwrapper.models.common.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.models.common.HelpPromptModel
@@ -94,7 +92,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
      * 'image_uplaod' when user is going to upload image
      * 'image_picker' when user is going to pick image for prompting
      */
-    private lateinit var mImagePickerWidget: ImagePickerWidget
+    private lateinit var mChatToolsWidget: ChatToolsWidget
     private var mImagePickerType: String = ""
 
     /** HttpClient for restful apis */
@@ -207,7 +205,6 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             return@setOnKeyListener false
         }
 
-        rootView.findViewById<View>(R.id.btn_send_message).setOnClickListener(this)
         rootView.findViewById<View>(R.id.btn_image_upload).setOnClickListener(this)
         rootView.findViewById<View>(R.id.btn_image_picker).setOnClickListener(this)
 
@@ -256,7 +253,6 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
     private fun setDisableActivity(enable: Boolean) {
         runOnUIThread {
             mEtMessage.isEnabled = enable
-            rootView.findViewById<View>(R.id.btn_send_message).isEnabled = enable
             rootView.findViewById<View>(R.id.btn_image_upload).isEnabled = enable
             rootView.findViewById<View>(R.id.btn_image_picker).isEnabled = enable
         }
@@ -507,10 +503,6 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.btn_send_message -> {
-                addMessage(mEtMessage.text.toString(), true)
-            }
-
             R.id.btn_image_upload -> {
                 mImagePickerType = PICKERTYPE_IMAGE_UPLOAD
                 if(rootView.findViewById<View>(R.id.ll_toolbar).visibility == View.VISIBLE)
@@ -577,7 +569,7 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
      * A picked image converts into bytearray data and upload to firebase storage.
      */
     private fun initImagePickerWidget() {
-        mImagePickerWidget = ImagePickerWidget(mContext!!)
+        mChatToolsWidget = ChatToolsWidget(mContext!!)
 
         val myImplementation = object : OnPositiveButtonClickListener {
             override fun onPositiveBtnClick(isCamera: Boolean?) {
@@ -616,10 +608,10 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
             }
         }
 
-        mImagePickerWidget.setOnClickListener(myImplementation)
+        mChatToolsWidget.setOnClickListener(myImplementation)
 
         val slidingWidget = rootView.findViewById<LinearLayout>(R.id.ll_toolbar)
-        slidingWidget.addView(mImagePickerWidget)
+        slidingWidget.addView(mChatToolsWidget)
     }
 
     private fun uploadSearchImage(imageByteArray: ByteArray) {
@@ -844,19 +836,17 @@ class ChatFragment : Fragment(), OnClickListener, HttpRisingInterface {
 
     private fun showSlidingWidget() {
         val slidingWidget = rootView.findViewById<View>(R.id.ll_toolbar)
-
-        val dy = slidingWidget.measuredHeight.toFloat()
         slidingWidget.visibility = View.VISIBLE
 
-        val anim = TranslateAnimation(0f, 0f, dy, 0f).apply {
-            duration = 150 // Set the animation duration, e.g., 300ms
+        val anim = AlphaAnimation(0f, 1f).apply {
+            duration = 200 // Set the animation duration, e.g., 300ms
             interpolator = AccelerateDecelerateInterpolator()
             setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {
+                override fun onAnimationStart(animation: Animation?) {}
+
+                override fun onAnimationEnd(animation: Animation?) {
                     slidingWidget.visibility = View.VISIBLE
                 }
-
-                override fun onAnimationEnd(animation: Animation?) {}
 
                 override fun onAnimationRepeat(animation: Animation?) {}
             })

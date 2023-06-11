@@ -21,10 +21,17 @@
     <color name="grey_400">#f5f5f5</color>
     <color name="grey_500">#222222</color>
     <color name="grey_600">#444444</color>
+    <color name="grey_700">#323232</color>
+    <color name="grey_800">#424242</color>
+    <color name="grey_900">#EBEBEB</color>
+    <color name="grey_1000">#707070</color>
+    <color name="grey_1100">#d0d0d0</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="green">#008000</color>
+    <color name="green_100">#99DBA7</color>
 
     <color name="transparent">#00000000</color>
     <color name="transparent_100">#bb000000</color>
@@ -32,14 +39,19 @@
 
     <!-- common -->
     <color name="common_rounded_button_bgcolor">@color/primary</color>
+    <color name="common_divier_color">@color/grey_1100</color>
 
     <!-- chat main interface -->
-    <color name="chat_content_top_bgcolor">@color/white</color>
-    <color name="fragment_chat_bg_color">@color/primary</color>
+    <color name="chat_main_content_top_bgcolor">@color/white</color>
+    <color name="chat_main_fragment_bg_color">@color/primary</color>
+    <color name="chat_main_history_bg_color">@color/grey_900</color>
+    <color name="chat_main_control_bgcolor">@color/grey_400</color>
+    <color name="chat_main_tools_bgcolor">@color/grey_400</color>
 
     <!-- chat RecyclerView -->
-    <color name="sent_message_background">@color/primary</color>
-    <color name="received_message_background">@color/grey_100</color>
+    <color name="chat_message_sent_bgcolor">@color/white</color>
+    <color name="chat_message_received_bgcolor">@color/green_100</color>
+    <color name="chat_message_text_color">@color/black</color>
 
     <!-- feedback -->
     <color name="feedback_thumb_color">@color/primary</color>
@@ -48,10 +60,10 @@
 
     <!-- SMS editor -->
     <color name="sms_bgcolor">@color/grey_400</color>
-    <color name="sms_button_text_color">@color/white</color>
+    <color name="sms_button_text_color">@color/grey_500</color>
     <color name="sms_bgcolor_editext">@color/grey_300</color>
     <color name="sms_button_bgcolor">@color/primary</color>
-    <color name="sms_button_edittext_color">@color/primary</color>
+    <color name="sms_button_edittext_color">@color/grey_500</color>
     <color name="sms_button_edittext_hint_color">@color/grey_200</color>
 
     <!-- loading -->
@@ -63,29 +75,36 @@
     <color name="load_assets_button_bgcolor">@color/primary</color>
 
     <!-- header -->
-    <color name="head_bgcolor">@color/primary</color>
+    <color name="head_bgcolor_start">@color/grey_600</color>
+    <color name="head_bgcolor_end">@color/grey_700</color>
     <color name="head_app_info_icon_bgcolor">@color/white</color>
     <color name="head_app_title_text_color">@color/white</color>
 
     <!-- control tools -->
-    <color name="control_button_common_bgcolor">@color/primary_dark</color>
-    <color name="control_button_icon_common_bgcolor">@color/white</color>
-    <color name="control_message_edittext_hint_color">@color/secondary_text</color>
-    <color name="control_message_edittext_text_color">@color/white</color>
+    <color name="control_common_divider_bgcolor">@color/common_divier_color</color>
+    <color name="control_common_button_bgcolor">@color/transparent</color>
+    <color name="control_common_button_stroke_color">@color/grey_1000</color>
+    <color name="control_common_button_icon_bgcolor">@color/grey_1000</color>
+    <color name="control_message_edittext_text_color">@color/grey_500</color>
+    <color name="control_message_edittext_stroke_color">@color/grey_1000</color>
+    <color name="control_message_edittext_bgcolor">@color/grey_900</color>
+    <color name="control_message_edittext_pointer_color">@color/grey_1000</color>
 
-    <!-- image picker widget -->
-    <color name="view_image_picker_bgcolor">@color/transparent</color>
-    <color name="view_image_picker_icon_color">@color/primary_light</color>
-    <color name="view_image_picker_text_color">@color/primary_light</color>
+    <!-- view chat tools widget -->
+    <color name="view_chat_tools_bgcolor">@color/transparent</color>
+    <color name="view_chat_tools_icon_color">@color/primary_light</color>
+    <color name="view_chat_tools_text_color">@color/primary_light</color>
 
     <!-- help promppt view -->
     <color name="view_help_prompt_bgcolor">@color/transparent</color>
-    <color name="view_help_prompt_common_textcolor">@color/primary_light</color>
+    <color name="view_help_prompt_common_textcolor">@color/grey_500</color>
     <color name="view_help_prompt_command_hint">@color/grey_200</color>
     <color name="view_help_prompt_command_listitem_bgcolor">@color/primary_light</color>
     <color name="view_help_prompt_command_listitem_textcolor">@color/white</color>
-    <color name="view_help_prompt_edittext_stroke_color">@color/primary_light</color>
-    <color name="view_help_prompt_edittext_hint_color">@color/grey_200</color>
+    <color name="view_help_prompt_edittext_stroke_color">@color/grey_1000</color>
+    <color name="view_help_prompt_edittext_hint_color">@color/grey_1000</color>
+    <color name="view_help_prompt_edittext_bgcolor">@color/grey_900</color>
+    <color name="view_help_prompt_button_text_color">@color/grey_500</color>
 
     <!-- help promppt view -->
     <color name="view_search_contact_bgcolor">@color/white</color>
@@ -109,5 +128,10 @@
     <color name="dialog_common_confirm_text_color">@color/grey_600</color>
     <color name="dialog_common_confirm_button_bg_color">@color/transparent</color>
     <color name="dialog_common_confirm_button_text_color">@color/primary_light</color>
+
+    <!-- chat tool item -->
+    <color name="item_chat_tool_stroke_color">@color/grey_1000</color>
+    <color name="item_chat_tool_icon_color">@color/grey_1000</color>
+    <color name="item_chat_tool_description_text_color">@color/grey_1000</color>
 
 </resources>

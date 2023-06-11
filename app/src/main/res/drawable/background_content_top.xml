@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/chat_content_top_bgcolor" />
+    <solid android:color="@color/chat_main_content_top_bgcolor" />
     <corners
-        android:bottomLeftRadius="@dimen/chat_content_top_radius"
-        android:bottomRightRadius="@dimen/chat_content_top_radius" />
+        android:bottomLeftRadius="@dimen/chat_main_content_top_radius"
+        android:bottomRightRadius="@dimen/chat_main_content_top_radius" />
 </shape>

@@ -4,7 +4,7 @@
     android:id="@+id/header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/head_bgcolor"
+    android:background="@drawable/background_header"
     android:paddingTop="@dimen/header_padding_top"
     android:paddingBottom="@dimen/header_padding_bottom">
 

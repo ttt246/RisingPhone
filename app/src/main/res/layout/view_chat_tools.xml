@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/view_chat_tools_margin"
+    android:background="@drawable/background_view_chat_tools"
+    android:baselineAligned="false"
+    android:orientation="horizontal" >
+
+    <GridLayout
+        android:id="@+id/gl_tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:rowCount="2"
+        android:columnCount="4"/>
+
+</LinearLayout>

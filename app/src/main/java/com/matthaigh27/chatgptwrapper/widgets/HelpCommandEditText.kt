@@ -32,7 +32,7 @@ class HelpCommandEditText(context: Context) : EditText(context) {
             context.resources.getDimensionPixelSize(R.dimen.view_help_prompt_edittext_fontsize)
                 .toFloat()
         )
-        setTextColor(context.getColor(R.color.primary))
+        setTextColor(context.getColor(R.color.view_help_prompt_common_textcolor))
         setHintTextColor(context.getColor(R.color.view_help_prompt_edittext_hint_color))
         background = context.getDrawable(R.drawable.background_view_help_prompt_edittext)
     }

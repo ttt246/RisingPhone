@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -36,7 +37,7 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
     }
 
     private fun initView() {
-        inflate(context, R.layout.view_help_prompt, this)
+        LayoutInflater.from(context).inflate(R.layout.view_help_prompt, this, true)
 
         layoutParams = LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
