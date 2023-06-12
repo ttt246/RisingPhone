@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/fragment_chat_bg_color"
+    android:background="@color/chat_main_fragment_bg_color"
     tools:context=".activites.HomeActivity">
 
     <!-- top header layout -->
@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/chat_main_tools_bgcolor">
 
         <include layout="@layout/view_controls" />
 
@@ -27,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/grey_100"
+            android:background="@color/chat_main_tools_bgcolor"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent">
         </LinearLayout>
@@ -37,9 +38,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/background_content_top"
+        android:background="@color/chat_main_history_bg_color"
         android:gravity="bottom"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/chat_main_content_padding_bottom"
         app:layout_constraintBottom_toTopOf="@+id/controls"
         app:layout_constraintTop_toBottomOf="@+id/header">
 

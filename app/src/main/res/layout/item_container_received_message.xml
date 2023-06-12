@@ -24,14 +24,16 @@
             android:id="@+id/imgMessage"
             android:layout_width="@dimen/chat_message_item_imageview_width"
             android:layout_height="@dimen/chat_message_item_imageview_height"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/textMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/chat_message_item_fontsize" />
+            android:textColor="@color/chat_message_text_color"
+            android:textSize="@dimen/chat_message_item_fontsize"
+            android:lineSpacingExtra="@dimen/chat_message_line_space"/>
     </LinearLayout>
 
     <LinearLayout

@@ -21,11 +21,11 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "BASE_URL", "\"https://smartphone.herokuapp.com/\""
+            buildConfigField "String", "BASE_URL", "\"https://ttt246-brain.hf.space/\""
         }
         release {
             // Use your desired server address for the release version
-            buildConfigField "String", "BASE_URL", "\"https://chatgptphone.herokuapp.com/\""
+            buildConfigField "String", "BASE_URL", "\"https://ttt246-brain.hf.space/\""
 
             minifyEnabled true
             shrinkResources true
