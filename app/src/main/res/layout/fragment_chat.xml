@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/chat_main_fragment_bg_color"
-    tools:context=".activites.HomeActivity">
+    tools:context=".ui.activites.HomeActivity">
 
     <!-- top header layout -->
     <include layout="@layout/view_header" />

@@ -146,13 +146,15 @@
     <dimen name="view_help_prompt_command_listitem_textsize">12sp</dimen>
     <dimen name="view_help_prompt_command_listitem_height">30dp</dimen>
     <dimen name="view_help_prompt_command_listitem_padding_horizontal">10dp</dimen>
-    <dimen name="view_help_prompt_edittext_round_size">@dimen/radius_small</dimen>
-    <dimen name="view_help_prompt_edittext_stroke_width">1dp</dimen>
     <dimen name="view_help_prompt_edittext_padding_start">10dp</dimen>
     <dimen name="view_help_prompt_edittext_fontsize">@dimen/font_normal</dimen>
     <dimen name="view_help_prompt_key_edittext_minheight">38dp</dimen>
     <dimen name="view_help_prompt_key_edittext_margin_bottom">5dp</dimen>
     <dimen name="view_help_prompt_key_edittext_padding_horizontal">5dp</dimen>
+
+    <dimen name="chat_widget_button_radius">20dp</dimen>
+    <dimen name="chat_widget_edittext_round_size">@dimen/radius_small</dimen>
+    <dimen name="chat_widget_edittext_stroke_width">1dp</dimen>
 
     <!-- search contact widget -->
     <dimen name="view_search_contact_padding_top">5dp</dimen>

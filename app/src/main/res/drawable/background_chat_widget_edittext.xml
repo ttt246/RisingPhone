@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/view_help_prompt_edittext_bgcolor" />
+    <solid android:color="@color/chat_widget_edittext_bgcolor" />
     <stroke
-        android:width="@dimen/view_help_prompt_edittext_stroke_width"
-        android:color="@color/view_help_prompt_edittext_stroke_color" />
-    <corners android:radius="@dimen/view_help_prompt_edittext_round_size" />
+        android:width="@dimen/chat_widget_edittext_stroke_width"
+        android:color="@color/chat_widget_edittext_stroke_color" />
+    <corners android:radius="@dimen/chat_widget_edittext_round_size" />
 </shape>
