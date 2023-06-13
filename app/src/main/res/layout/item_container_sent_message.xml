@@ -15,6 +15,7 @@
         android:background="@drawable/background_sent_message"
         android:orientation="vertical"
         android:padding="@dimen/chat_message_item_padding"
+        android:gravity="right"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_max="wrap"

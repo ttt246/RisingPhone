@@ -29,7 +29,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
         <activity
-            android:name=".activites.HomeActivity"
+            android:name=".ui.activites.HomeActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>

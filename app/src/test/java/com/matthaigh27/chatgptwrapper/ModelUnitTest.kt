@@ -1,7 +1,7 @@
 package com.matthaigh27.chatgptwrapper
 
-import com.matthaigh27.chatgptwrapper.models.viewmodels.ChatMessageModel
-import com.matthaigh27.chatgptwrapper.models.common.ImagePromptModel
+import com.matthaigh27.chatgptwrapper.data.models.common.ChatMessageModel
+import com.matthaigh27.chatgptwrapper.data.models.common.ImagePromptModel
 import org.junit.Test
 
 import org.junit.Assert.*

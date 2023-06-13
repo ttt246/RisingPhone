@@ -61,8 +61,6 @@
     <!-- SMS editor -->
     <color name="sms_bgcolor">@color/grey_400</color>
     <color name="sms_button_text_color">@color/grey_500</color>
-    <color name="sms_bgcolor_editext">@color/grey_300</color>
-    <color name="sms_button_bgcolor">@color/primary</color>
     <color name="sms_button_edittext_color">@color/grey_500</color>
     <color name="sms_button_edittext_hint_color">@color/grey_200</color>
 
@@ -101,10 +99,12 @@
     <color name="view_help_prompt_command_hint">@color/grey_200</color>
     <color name="view_help_prompt_command_listitem_bgcolor">@color/primary_light</color>
     <color name="view_help_prompt_command_listitem_textcolor">@color/white</color>
-    <color name="view_help_prompt_edittext_stroke_color">@color/grey_1000</color>
-    <color name="view_help_prompt_edittext_hint_color">@color/grey_1000</color>
-    <color name="view_help_prompt_edittext_bgcolor">@color/grey_900</color>
     <color name="view_help_prompt_button_text_color">@color/grey_500</color>
+
+    <color name="chat_widget_edittext_stroke_color">@color/grey_1000</color>
+    <color name="chat_widget_edittext_hint_color">@color/grey_1000</color>
+    <color name="chat_widget_edittext_bgcolor">@color/grey_900</color>
+    <color name="chat_widget_edittext_text_color">@color/grey_500</color>
 
     <!-- help promppt view -->
     <color name="view_search_contact_bgcolor">@color/white</color>
