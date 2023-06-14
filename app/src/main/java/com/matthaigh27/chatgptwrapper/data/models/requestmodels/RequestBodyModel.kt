@@ -14,12 +14,14 @@ class RequestBodyModel(builder: Builder) {
     var message: String = ""
     var imageName: String = ""
     var uuid: String = ""
+    var status: String = ""
 
     init {
         this.token = MyApplication.appContext.getFCMToken()
         this.uuid = MyApplication.appContext.getUUID()
         this.message = builder.message
         this.imageName = builder.imageName
+        this.status = builder.status
     }
 
     @Throws(JSONException::class)
@@ -31,6 +33,7 @@ class RequestBodyModel(builder: Builder) {
         jsonObject.accumulate("message", message)
         jsonObject.accumulate("image_name", imageName)
         jsonObject.accumulate("uuid", uuid)
+        jsonObject.accumulate("status", status)
 
         return jsonObject
     }
@@ -41,6 +44,7 @@ class RequestBodyModel(builder: Builder) {
         var message: String = ""
         var imageName: String = ""
         var uuid: String = ""
+        var status: String = ""
 
         constructor() {
 
@@ -76,6 +80,11 @@ class RequestBodyModel(builder: Builder) {
 
         fun uuid(uuid: String): Builder {
             this.uuid = uuid
+            return this
+        }
+
+        fun status(status: String): Builder {
+            this.status = status
             return this
         }
 

@@ -1,11 +1,13 @@
 package com.matthaigh27.chatgptwrapper.data.models.common
 
-class ImagePromptModel {
-    var id: String = ""
-    var path: String = ""
+import android.net.Uri
 
-    constructor(id: String, path: String) {
-        this.id = id
-        this.path = path
+class ImagePromptModel {
+    var uri: Uri? = null
+    var dateModified: Long = -1L
+
+    constructor(uri: Uri, date: Long) {
+        this.uri = uri
+        this.dateModified = date
     }
 }
