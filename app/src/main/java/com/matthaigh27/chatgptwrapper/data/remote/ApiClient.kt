@@ -92,9 +92,10 @@ class ApiClient {
     }
 
     /* call image_upload */
-    fun callImageUpload(imageName: String) {
+    fun callImageUpload(imageName: String, status: String) {
         sendOkHttpRequest(
-            RequestBodyModel.Builder().imageName(imageName).type(ReqType.instance.IMAGE_UPLOAD)
+            RequestBodyModel.Builder().imageName(imageName).status(status)
+                .type(ReqType.instance.IMAGE_UPLOAD)
                 .build().buildJsonObject().toString(), UPLOAD_IMAGE, POST
         )
     }
@@ -109,7 +110,8 @@ class ApiClient {
 
     fun trainContacts(contacts: ArrayList<ContactModel>) {
         sendOkHttpRequest(
-            RequestTrainContactModel.Builder().contacts(contacts).build().buildJsonObject().toString(),
+            RequestTrainContactModel.Builder().contacts(contacts).build().buildJsonObject()
+                .toString(),
             TRAIN_CONTACTS,
             POST
         )

@@ -8,4 +8,5 @@ data class ImageEntity (
     @PrimaryKey(autoGenerate = true) val id: Int,
     val path: String,
     val name: String,
+    val dataModified: Long
 )

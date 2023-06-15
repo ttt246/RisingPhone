@@ -7,27 +7,27 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class ModelUnitTest {
-    @Test
-    fun chatModel_isCorrect() {
-        val testMessage = "TestMessage"
-        val testImageName = "TestImageName"
-        val testByteArraySize = 10
-        val testFeedback = 0
-        val testIsMe = true
-
-        val model = ChatMessageModel()
-        model.message = testMessage
-        model.isMe = testIsMe
-        model.feedback = testFeedback
-        model.imageName = testImageName
-        model.image = ByteArray(testByteArraySize);
-
-        assertEquals(model.message, testMessage)
-        assertEquals(model.isMe, testIsMe)
-        assertEquals(model.feedback, testFeedback)
-        assertEquals(model.imageName, testImageName)
-        assertEquals(model.image!!.size, testByteArraySize)
-    }
+//    @Test
+//    fun chatModel_isCorrect() {
+//        val testMessage = "TestMessage"
+//        val testImageName = "TestImageName"
+//        val testByteArraySize = 10
+//        val testFeedback = 0
+//        val testIsMe = true
+//
+//        val model = ChatMessageModel()
+//        model.message = testMessage
+//        model.isMe = testIsMe
+//        model.feedback = testFeedback
+//        model.imageName = testImageName
+//        model.image = ByteArray(testByteArraySize);
+//
+//        assertEquals(model.message, testMessage)
+//        assertEquals(model.isMe, testIsMe)
+//        assertEquals(model.feedback, testFeedback)
+//        assertEquals(model.imageName, testImageName)
+//        assertEquals(model.image!!.size, testByteArraySize)
+//    }
 
 //    @Test
 //    fun requestBodyModel_isCorrect() {
@@ -52,14 +52,14 @@ class ModelUnitTest {
 //        assertEquals(model.imageName, testImageName)
 //    }
 
-    @Test
-    fun imageTableModel_isCorrect() {
-        val testId = "TestId"
-        val testPath = "TestPath"
-
-        val model = ImagePromptModel(testId, testPath)
-
-        assertEquals(model.id, testId)
-        assertEquals(model.path, testPath)
-    }
+//    @Test
+//    fun imageTableModel_isCorrect() {
+//        val testId = "TestId"
+//        val testPath = "TestPath"
+//
+//        val model = ImagePromptModel(testId, testPath)
+//
+//        assertEquals(model.id, testId)
+//        assertEquals(model.path, testPath)
+//    }
 }

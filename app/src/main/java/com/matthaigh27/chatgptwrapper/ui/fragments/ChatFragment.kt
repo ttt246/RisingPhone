@@ -39,6 +39,7 @@ import com.matthaigh27.chatgptwrapper.data.models.*
 import com.matthaigh27.chatgptwrapper.data.models.common.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.data.models.common.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.data.models.common.ChatMessageModel
+import com.matthaigh27.chatgptwrapper.data.models.common.ImagePromptModel
 import com.matthaigh27.chatgptwrapper.data.remote.ApiClient
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResponse
 import com.matthaigh27.chatgptwrapper.utils.Constants.*
@@ -57,6 +58,7 @@ import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -132,7 +134,7 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
         initView()
         initDatabase()
 
-//        trainImages()
+        trainImages()
         getAllPromptCommands()
     }
 
@@ -505,7 +507,7 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
         when (view.id) {
             R.id.btn_image_upload -> {
                 mImagePickerType = PICKERTYPE_IMAGE_UPLOAD
-                if(rootView.findViewById<View>(R.id.ll_toolbar).visibility == View.VISIBLE)
+                if (rootView.findViewById<View>(R.id.ll_toolbar).visibility == View.VISIBLE)
                     hideSlidingWidget()
                 else
                     showSlidingWidget()
@@ -513,7 +515,7 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
 
             R.id.btn_image_picker -> {
                 mImagePickerType = PICKERTYPE_IMAGE_PICK
-                if(rootView.findViewById<View>(R.id.ll_toolbar).visibility == View.VISIBLE)
+                if (rootView.findViewById<View>(R.id.ll_toolbar).visibility == View.VISIBLE)
                     hideSlidingWidget()
                 else
                     showSlidingWidget()
@@ -544,7 +546,7 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
      */
     private fun pickedImage(imageByteData: ByteArray, type: String) {
         if (type == "image_upload") {
-            uploadImageToFirebaseStorage(imageByteData)
+            uploadImageToFirebaseStorage(imageByteData, "created")
         } else {
             uploadSearchImage(imageByteData)
         }
@@ -638,7 +640,7 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
     /**
      * @param imageByteArray ByteArray data for image to upload to firebase storage
      */
-    private fun uploadImageToFirebaseStorage(imageByteArray: ByteArray) {
+    private fun uploadImageToFirebaseStorage(imageByteArray: ByteArray, status: String) {
         showLoading(true, LOADING_UPLOADING_IAMGE)
         val storageRef = FirebaseStorage.getInstance().reference
         val uuid = UUID.randomUUID()
@@ -652,7 +654,7 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
             Log.d(TAG, "Success upload to firebase storage")
 
             showLoading(false)
-            apiClient.callImageUpload("$uuid")
+            apiClient.callImageUpload("$uuid", status)
         }
     }
 
@@ -754,10 +756,10 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
         showToast(msg)
     }
 
-    private fun queryImagesFromExternalStorage(contentResolver: ContentResolver): ArrayList<Uri> {
-        val listOfImageUris = ArrayList<Uri>()
+    private fun queryImagesFromExternalStorage(contentResolver: ContentResolver): ArrayList<ImagePromptModel> {
+        val listOfImages = ArrayList<ImagePromptModel>()
 
-        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val projection = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_MODIFIED)
 
         val sortOrder = "${MediaStore.Images.Media.DATE_TAKEN} DESC"
 
@@ -765,15 +767,19 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, sortOrder
         )?.use { cursor ->
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+            val dateColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED)
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
+                val dataModified = cursor.getLong(dateColumn)
+
                 val contentUri = Uri.withAppendedPath(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id.toString()
                 )
-                listOfImageUris.add(contentUri)
+
+                listOfImages.add(ImagePromptModel(contentUri, dataModified))
             }
         }
-        return listOfImageUris
+        return listOfImages
     }
 
     private fun trainImages() {
@@ -781,22 +787,39 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
             val images = queryImagesFromExternalStorage(requireContext().contentResolver)
             val originalImages = mRoomDataHandler.imageDao().getAllImages()
 
-            images.forEach { uri ->
+            val existImageStatus = BooleanArray(originalImages.size) { false }
+            images.forEach { image ->
                 var isExist = false
-                val path = Utils.instance.getRealPathFromUri(requireContext(), uri)
+                val path = Utils.instance.getRealPathFromUri(requireContext(), image.uri)
                 for (i in originalImages.indices) {
                     val entity: ImageEntity = originalImages[i]
                     if (entity.path == path) {
+                        if (entity.dataModified != image.dateModified) {
+                            val byteArray = Utils.instance.getBytesFromPath(path)
+                            val uuid = uploadImageToFirebaseStorage(byteArray, "updated")
+                            mRoomDataHandler.imageDao()
+                                .updateImage(ImageEntity(0, path, "$uuid", image.dateModified))
+                        }
                         isExist = true
                         break
+                        existImageStatus[i] = true
                     }
                 }
                 if (!isExist) {
                     val byteArray = Utils.instance.getBytesFromPath(path)
-                    val uuid = uploadImageToFirebaseStorage(byteArray)
+                    val uuid = uploadImageToFirebaseStorage(byteArray, "created")
 
                     if (path != null)
-                        mRoomDataHandler.imageDao().insertImage(ImageEntity(0, path, "$uuid"))
+                        mRoomDataHandler.imageDao()
+                            .insertImage(ImageEntity(0, path, "$uuid", image.dateModified))
+                }
+            }
+
+            for (i in existImageStatus.indices) {
+                if (!existImageStatus[i]) {
+                    apiClient.callImageUpload(originalImages[i].name, "deleted")
+                    mRoomDataHandler.imageDao()
+                        .deleteImage(ImageEntity(originalImages[i].id, "", "", 0L))
                 }
             }
         }
@@ -819,7 +842,8 @@ class ChatFragment : Fragment(), OnClickListener, ApiResponse {
                 null, /* parts = */
                 parts, /* sentIntents = */
                 null, /* deliveryIntents = */
-                null)
+                null
+            )
         } catch (e: SecurityException) {
             e.printStackTrace()
         } catch (e: Exception) {
